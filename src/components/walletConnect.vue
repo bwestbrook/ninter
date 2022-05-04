@@ -6,28 +6,7 @@
 
 <script>
 
-import { BeaconWallet } from '@taquito/beacon-wallet'
-import { TezosToolkit } from '@taquito/taquito'
-import { NODE_URL } from '../constants'
-
-const Tezos = new TezosToolkit(NODE_URL);
-
-let globalWallet = undefined // Starts as a global undefined varible 
-
-const getBeaconInstance = async () => {
-    if (!globalWallet) {
-        // Create a new BeaconWallet instance. The options will be passed to the DAppClient constructor.
-        const wallet = new BeaconWallet({name: "txl"})
-        // Setting the wallet as the wallet provider for Taquito.
-        Tezos.setWalletProvider(wallet)
-        globalWallet = wallet
-        console.log(wallet)
-        console.log(Tezos)
-    }
-    console.log("returning")
-    console.log(globalWallet)
-    return globalWallet
-}
+import { DAppClient } from "@airgap/beacon-sdk";
 
 export default {
     props: [
@@ -36,10 +15,23 @@ export default {
         ],
     methods: {
         async connectWallet () {
-                const wallet = await getBeaconInstance({name: "TXL"})
-                console.log(wallet)
-                console.log("requesting permission")
-                await wallet.requestPermissions()
+
+                const dAppClient = new DAppClient({ name: "Beacon Docs" });
+
+                let myAddress = "";
+                console.log(myAddress)
+                const activeAccount = await dAppClient.getActiveAccount();
+                console.log("aadgdafa")
+                console.log(activeAccount)
+                if (activeAccount) {
+                    console.log("Already connected:", activeAccount.address);
+                    myAddress = activeAccount.address;
+
+                } else {
+                    const permissions = await dAppClient.requestPermissions();
+                    console.log("New connection:", permissions.address);
+                    myAddress = permissions.address;
+                }
         }  
     }
 }

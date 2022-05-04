@@ -10,7 +10,7 @@
   "dependencies": {
     "@airgap/beacon-sdk": "^3.0.0",
     "@taquito/beacon-wallet": "^12.1.0",
-    "@taquito/taquito": "10.2.1",
+    "@taquito/taquito": "^12.1.0",
     "core-js": "^3.8.3",
     "http": "^0.0.1-security",
     "http-stream": "^0.1.1",
