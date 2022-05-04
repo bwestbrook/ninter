@@ -8,6 +8,7 @@
 
 import { DAppClient } from "@airgap/beacon-sdk";
 
+
 export default {
     props: [
         "header_string",
@@ -18,7 +19,7 @@ export default {
 
                 const dAppClient = new DAppClient({ name: "Beacon Docs" });
 
-                let myAddress = "";
+                let myAddress = "aa";
                 console.log(myAddress)
                 const activeAccount = await dAppClient.getActiveAccount();
                 console.log("aadgdafa")
@@ -28,6 +29,8 @@ export default {
                     myAddress = activeAccount.address;
 
                 } else {
+                    console.log("dog")
+                    console.log(dAppClient)
                     const permissions = await dAppClient.requestPermissions();
                     console.log("New connection:", permissions.address);
                     myAddress = permissions.address;
