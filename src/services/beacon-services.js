@@ -18,23 +18,12 @@ const getBeaconInstance = async () => {
     Tezos.setWalletProvider(wallet)
     globalWallet = wallet
   }
-
   return globalWallet
 }
 
-export const connectToBeacon = async () => {
+export const getBeaconWallet = async () => {
   console.log('CHECKING BEACON CONECTION NOW')
   const wallet = await getBeaconInstance()
-
-  if (await wallet.client.getActiveAccount()) {
-    // Check if we already have an account connected, so we can skip requestPermissions.
-  
-    return wallet
-  }
-
-  // Send permission request to the connected wallet. This will either be the browser extension, or a wallet over the P2P network.
-  await wallet.requestPermissions()
-
   return wallet
 }
 

@@ -2,38 +2,74 @@
     <div ref="walletConnectBar" class="d-flex flex-row">
         <ul class="navigation">
             <div ref="connectWalletDisplay"></div>
-            <button @click="displayWalletState" ref="connectWalletButton" class="connect-button">CONNECT</button>
+            <button @click="displayWalletState" ref="connectWalletButton" class="connect-button">LOAD</button>
         </ul>
     </div>
 </template>
 
 <script>
 
-import { connectToBeacon, reduceAddress, disconnectFromBeacon } from '../services/beacon-services.js'
+import { getBeaconWallet, reduceAddress, disconnectFromBeacon } from '../services/beacon-services.js'
 
 var reduced_address;
 
+
 export default {
     emits:[
-        "toggleModal"
+        "addressReady",
+        "toggleConnectToBeacon"
     ],
     beforeMount() {
         this.displayWalletState()
     },
+    props: [
+        "connectToBeacon",
+        "walletConnected"
+    ],
     methods: {
+        async walletState() {
+            if (this.$refs.connectWalletButton.innerText === "CONNECT") {
+                console.log('it was clicked to toggle Beacon')
+                console.log(this.connectToBeacon)
+                console.log(this.$emit("toggleConnectToBeacon"))
+                const connectToBeacon = this.$emit("toggleConnectToBeacon")
+                console.log(connectToBeacon)
+                this.displayWalletState('false', 'false')
+            } 
+        },
         async displayWalletState() {
-            const wallet = await connectToBeacon();
+            const wallet = await getBeaconWallet();
             const activeAccount = await wallet.client.getActiveAccount()
             if (this.$refs.connectWalletButton.innerText === "DISCONNECT" && activeAccount) {
                 await disconnectFromBeacon()
                 this.$refs.connectWalletDisplay.innerText = '...'
-                this.$refs.connectWalletButton.innerText = "    CONNECT"
-            } else {  
-                reduced_address = await reduceAddress(activeAccount.address)
-                this.$refs.connectWalletDisplay.innerText = reduced_address
-                this.$refs.connectWalletButton.innerText = "DISCONNECT"
-                this.$emit('toggleModal')
-                console.log('yolololo')
+                this.$refs.connectWalletButton.innerText = "CONNECT"
+                console.log(this.$emit('addressReady', ""))
+            } else if (this.$refs.connectWalletButton.innerText === "LOAD") {
+                this.$refs.connectWalletButton.innerText = "CONNECT"
+            } else {
+                const activeAccount = await wallet.client.getActiveAccount()
+                if (!activeAccount) {
+                    await wallet.requestPermissions()
+                    const activeAccount = await wallet.client.getActiveAccount()
+                    const address = await activeAccount.address
+                    reduced_address = await reduceAddress(address)
+                    this.$refs.connectWalletDisplay.innerText = reduced_address
+                    this.$refs.connectWalletButton.innerText = "DISCONNECT"
+                    this.reduced_address = reduced_address
+                    this.setAddress = address
+                    console.log(this.$emit('addressReady', address))
+                } else {
+                    const activeAccount = await wallet.client.getActiveAccount()
+                    const address = await activeAccount.address
+                    reduced_address = await reduceAddress(address)
+                    this.$refs.connectWalletDisplay.innerText = reduced_address
+                    this.$refs.connectWalletButton.innerText = "DISCONNECT"
+                    this.reduced_address = reduced_address
+                    this.setAddress = address
+                    console.log(this.$emit('addressReady', address))
+                }
+
             }
         }
     }

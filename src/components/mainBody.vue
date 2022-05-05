@@ -1,5 +1,4 @@
 <template>
-    <a ref="selectedTxl">...</a>
     <div v-if="showModal"> 
         <displayPopup :displayLink="displayLink" :attributes="attributes" />
     </div>
@@ -25,12 +24,9 @@ export default {
     props: [
         "showModal"
     ],
-    emits: [
-        "toggleModal"
-    ],
     methods: { 
         async getLink(address='') {
-            const meta_data = await getMyAddress(address)
+            const meta_data = await this.getMetaData(address)
             return meta_data.artifactUri
         },
         async getMetaData(address='') {

@@ -1,8 +1,8 @@
 <template>
   <div class="mainBackground">
-    <walletConnect />
-    <inputSection :setAddress="setAddress" />
-    <mainBody :showModal="showModal" @toggleModal="toggleModal" />
+    <walletConnect :connectToBeacon="connectToBeacon" :walletConnected="walletConnected" @addressReady="addressReady" @toggleConnectToBeacon="toggleConnectToBeacon" />
+    <inputSection :setAddress="setAddress" @addressReady="addressReady" />
+    <mainBody :showModal="showModal"  />
   </div>
 </template>
 
@@ -12,17 +12,21 @@ import walletConnect from "./components/walletConnect.vue"
 import inputSection from "./components/inputSection.vue"
 import mainBody from "./components/mainBody.vue"
 
+
 export default {
   name: 'App',
   components: { walletConnect, inputSection, mainBody },
   data () {
     return {
       setAddress: "yolo",
-      showModal: false
+      connectToBeacon: false,
+      showModal: false,
+      walletConnected: false
     }
   },
   beforeMount() {
     this.addressReady()
+    this.checkWallet()
   },
   methods: {
     getTxlData() {
@@ -36,10 +40,27 @@ export default {
     toggleModal() {
       this.showModal = !this.showModal
     },
-    addressReady() {
-      this.setAddress = "FAERTESDf"
+    toggleConnectToBeacon() {
+      console.log("toggling beacon state")
+      console.log(this.connectToBeacon)
+      if (!this.connectToBeacon) {
+        this.connectToBeacon = true
+      }
+      console.log(this.connectToBeacon)
+      console.log("toggled beacon state")
+      const connectToBeacon = this.connectToBeacon
+      return {
+        connectToBeacon
+      }
+    },
+    addressReady(address='') {
+      this.setAddress = address
+      console.log(this.setAddress)
       console.log('estoy aui')
     },
+    checkWallet() {
+      console.log('esdsafdsatoy aui')
+    },    
   }
 }
 </script>
