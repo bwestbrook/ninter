@@ -9,7 +9,7 @@
 
 <script>
 
-import displayPopup from "./components/displayPopup.vue"
+
 import walletConnect from "./components/walletConnect.vue"
 import mainBody from "./components/mainBody.vue"
 
