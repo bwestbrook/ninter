@@ -14,22 +14,27 @@ import { connectToBeacon, reduceAddress, disconnectFromBeacon } from '../service
 var reduced_address;
 
 export default {
+    emits:[
+        "toggleModal"
+    ],
+    beforeMount() {
+        this.displayWalletState()
+    },
     methods: {
         async displayWalletState() {
             const wallet = await connectToBeacon();
             const activeAccount = await wallet.client.getActiveAccount()
             if (this.$refs.connectWalletButton.innerText === "DISCONNECT" && activeAccount) {
-                console.log("d")
                 await disconnectFromBeacon()
                 this.$refs.connectWalletDisplay.innerText = '...'
                 this.$refs.connectWalletButton.innerText = "    CONNECT"
-            } else {
-                console.log(activeAccount.address)
+            } else {  
                 reduced_address = await reduceAddress(activeAccount.address)
                 this.$refs.connectWalletDisplay.innerText = reduced_address
                 this.$refs.connectWalletButton.innerText = "DISCONNECT"
+                this.$emit('toggleModal')
+                console.log('yolololo')
             }
-
         }
     }
 }

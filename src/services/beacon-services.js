@@ -23,7 +23,7 @@ const getBeaconInstance = async () => {
 }
 
 export const connectToBeacon = async () => {
-  console.log('CONNECTING TO BEACON NOW')
+  console.log('CHECKING BEACON CONECTION NOW')
   const wallet = await getBeaconInstance()
 
   if (await wallet.client.getActiveAccount()) {
@@ -78,17 +78,15 @@ export const getIpfsDict = async(address) => {
   } 
 }
 
-export const getIpfsLink = async(address) => {
+export const getIpfsMetaDataJson = async(address) => {
   const user_token_ipfs_dict = await getIpfsDict(address)
   if (user_token_ipfs_dict) {
     const user_token_ipfs_as_bytes = await user_token_ipfs_dict.get(NULL_STR)
     const ipfs_meta_data_link = bytes2Char(user_token_ipfs_as_bytes)
-    console.log(ipfs_meta_data_link)
-    console.log('adfafasdf')
-    const ipfs_data = getJsonObject(ipfs_meta_data_link)
-    return ipfs_data
+    const ipfs_meta_data_json = getJsonObject(ipfs_meta_data_link)
+    return ipfs_meta_data_json
   } else {
-      alert("NO NFTS FOUND")
+      alert("No NFTs for address", address)
   }
 }
 
