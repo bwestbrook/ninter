@@ -1,57 +1,74 @@
 <template>
-    <div ref="walletConnectBar">
-        <button @click="connectWallet" ref="connectWalletButton">Connect Wallet</button>
+    <div ref="walletConnectBar" class="d-flex flex-row">
+        <ul class="navigation">
+            <div ref="connectWalletDisplay"></div>
+            <button @click="displayWalletState" ref="connectWalletButton" class="connect-button">CONNECT</button>
+        </ul>
     </div>
 </template>
 
 <script>
 
-import { DAppClient } from "@airgap/beacon-sdk";
+import { connectToBeacon, reduceAddress, disconnectFromBeacon } from '../services/beacon-services.js'
 
+var reduced_address;
 
 export default {
-    props: [
-        "header_string",
-        "information"
-        ],
     methods: {
-        async connectWallet () {
+        async displayWalletState() {
+            const wallet = await connectToBeacon();
+            const activeAccount = await wallet.client.getActiveAccount()
+            if (this.$refs.connectWalletButton.innerText === "DISCONNECT" && activeAccount) {
+                console.log("d")
+                await disconnectFromBeacon()
+                this.$refs.connectWalletDisplay.innerText = '...'
+                this.$refs.connectWalletButton.innerText = "    CONNECT"
+            } else {
+                console.log(activeAccount.address)
+                reduced_address = await reduceAddress(activeAccount.address)
+                this.$refs.connectWalletDisplay.innerText = reduced_address
+                this.$refs.connectWalletButton.innerText = "DISCONNECT"
+            }
 
-                const dAppClient = new DAppClient({ name: "Beacon Docs" });
-
-                let myAddress = "aa";
-                console.log(myAddress)
-                const activeAccount = await dAppClient.getActiveAccount();
-                console.log("aadgdafa")
-                console.log(activeAccount)
-                if (activeAccount) {
-                    console.log("Already connected:", activeAccount.address);
-                    myAddress = activeAccount.address;
-
-                } else {
-                    console.log("dog")
-                    console.log(dAppClient)
-                    const permissions = await dAppClient.requestPermissions();
-                    console.log("New connection:", permissions.address);
-                    myAddress = permissions.address;
-                }
-        }  
+        }
     }
 }
+
 
 </script>
 
 <style scoped>
-.modal{
-    width: 400px;
-    padding: 20px;
-    margin: 100px auto;
-    border-radius: 10px;
+.modal {
+  width: 400px;
+  padding: 20px;
+  margin: 100px auto;
+  border-radius: 10px;
 }
-.backdrop{
-    top: 0;
-    background: rgb(0.1, 0.1, 0.1);
-    width: 100%;
-    height: 100%;
+.backdrop {
+  top: 0;
+  background: rgb(0.1, 0.1, 0.1);
+  width: 100%;
+  height: 100%;
+}
+.navigation {
+    padding: 20px;
+    border: 5px;
+    display: inline-flex;
+    border-radius: 4px;
+    list-style-type: none;
+}
+.connect-button{
+    padding: 2px;
+    border: 50px;
+    border-radius: 4px;
+    background: rgb(28, 51, 121);
+    color:aliceblue;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+.display-address{
+    padding: 20px;
+    border: 5px;
 }
 </style>

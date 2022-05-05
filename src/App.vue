@@ -1,32 +1,28 @@
 <template>
   <walletConnect />
-  <h1>Welcome To the Minter</h1>
-  <h2>{{ title }}</h2>
-
   <div v-if="showModal"> 
-     <displayPopup :header_string="header_string" :information="information"/>
+     <displayPopup />
   </div>
-  <input type="text" ref="txlId" placeholder="Enter TXL ID">
-  <button @click="getTxlData" ref="getDataButton">Get Data</button> 
-  <button @click="toggleModal" ref="showModalButton">SHOW</button> 
-  <h3 ref="selectedTxl">...</h3>
+  <mainBody />
 </template>
 
+
 <script>
+
 import displayPopup from "./components/displayPopup.vue"
 import walletConnect from "./components/walletConnect.vue"
+import mainBody from "./components/mainBody.vue"
+
 
 export default {
-   name: 'App',
-   components: { displayPopup, walletConnect },
-   data () {
-     return {
-       title: "TXL Minter be like it do",
-       header_string: "This be the header yo",
-       information: "Information will set you free",
-       showModal: false
-
-   }
+  name: 'App',
+  components: { displayPopup, walletConnect, mainBody },
+  data () {
+    return {
+      title: "TXL Minter be like it do",
+      header_string: "This be the header yo",
+      showModal: false
+    }
   },
   methods: {
     getTxlData() {
@@ -40,12 +36,12 @@ export default {
     toggleModal () {
       this.showModal = !this.showModal
       if (!this.showModal) {
-          this.$refs.showModalButton.innerText = "SHOW"
-      } else {
-        this.$refs.showModalButton.innerText = "HIDE"
+            this.$refs.showModalButton.innerText = "SHOW"
+        } else {
+          this.$refs.showModalButton.innerText = "HIDE"
+        }
       }
     }
-  }
 }
 </script>
 

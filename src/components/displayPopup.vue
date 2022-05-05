@@ -11,7 +11,7 @@
 export default {
     props: [
         "header_string",
-        "information"
+        "information",
         ]
 }
 

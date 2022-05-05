@@ -5,14 +5,12 @@ import { NODE_URL, NFT_CONTRACT, NULL_STR } from '../constants'
 
 const Tezos = new TezosToolkit(NODE_URL);
 
-//let globalWallet: BeaconWallet | undefined
-
 let globalWallet = undefined
 
 const getBeaconInstance = async () => {
   if (!globalWallet) {
     // Create a new BeaconWallet instance. The options will be passed to the DAppClient constructor.
-    const wallet = new BeaconWallet({ name: 'TzButton' })
+    const wallet = new BeaconWallet({ name: 'TXL Minter Connection' })
 
     // Setting the wallet as the wallet provider for Taquito.
     Tezos.setWalletProvider(wallet)
@@ -28,6 +26,7 @@ export const connectToBeacon = async () => {
 
   if (await wallet.client.getActiveAccount()) {
     // Check if we already have an account connected, so we can skip requestPermissions.
+  
     return wallet
   }
 
@@ -55,26 +54,48 @@ export const getMyNfts = async () => {
   return activeAccountStr
 }
 
-
-export const getIpfsLink = async() => {
-  const user_token_id = 0
+export const getContractStorage = async() => {
   const contract = await Tezos.wallet.at(NFT_CONTRACT)
   const storage = await contract.storage()
-  const all_token_metadata = await storage.token_metadata
-  const user_token_metadata = await all_token_metadata.get(user_token_id)
-  console.log(user_token_metadata)
-  const user_token_ipfs_dict = await user_token_metadata.token_info.valueMap
-  console.log(user_token_ipfs_dict) 
-  const user_token_ipfs_as_bytes = await user_token_ipfs_dict.get(NULL_STR)
-  console.log(user_token_ipfs_as_bytes)
-  const ipfs_data = bytes2Char(user_token_ipfs_as_bytes)
-  return ipfs_data
+  return storage
+}
+
+export const getIpfsDict = async(address) => {
+  const storage = await getContractStorage()
+  console.log(address)
+  const user_token_id = 0
+  const ledger = await storage.ledger
+  const owners = await ledger.get(0)
+  if (owners === address) {
+    const all_token_metadata = await storage.token_metadata
+    const user_token_metadata = await all_token_metadata.get(user_token_id)
+    const user_token_ipfs_dict = await user_token_metadata.token_info.valueMap
+    return user_token_ipfs_dict
+  } 
+}
+
+export const getIpfsLink = async(address) => {
+  const user_token_ipfs_dict = await getIpfsDict(address)
+  if (user_token_ipfs_dict) {
+    const user_token_ipfs_as_bytes = await user_token_ipfs_dict.get(NULL_STR)
+    const ipfs_data = bytes2Char(user_token_ipfs_as_bytes)
+    return ipfs_data
+  } else {
+    alert("NO NFTS FOUND")
+  }
+
+
 }
 
 export const helloWorld = async() => {
   const hw = 'hello world'
   return hw
 }
+
+export const reduceAddress = async(address) => {
+  return address.substring(0, 4) + '..' + address.substring(address.length - 4)
+}
+
 
 
 
