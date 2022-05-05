@@ -3,6 +3,8 @@ import { TezosToolkit } from '@taquito/taquito'
 import { bytes2Char } from '@taquito/utils'
 import { NODE_URL, NFT_CONTRACT, NULL_STR } from '../constants'
 
+import $ from 'jquery'
+
 const Tezos = new TezosToolkit(NODE_URL);
 
 let globalWallet = undefined
@@ -69,7 +71,9 @@ export const getIpfsDict = async(address) => {
   if (owners === address) {
     const all_token_metadata = await storage.token_metadata
     const user_token_metadata = await all_token_metadata.get(user_token_id)
+    console.log(user_token_metadata)
     const user_token_ipfs_dict = await user_token_metadata.token_info.valueMap
+    console.log(user_token_ipfs_dict)
     return user_token_ipfs_dict
   } 
 }
@@ -78,18 +82,20 @@ export const getIpfsLink = async(address) => {
   const user_token_ipfs_dict = await getIpfsDict(address)
   if (user_token_ipfs_dict) {
     const user_token_ipfs_as_bytes = await user_token_ipfs_dict.get(NULL_STR)
-    const ipfs_data = bytes2Char(user_token_ipfs_as_bytes)
+    const ipfs_meta_data_link = bytes2Char(user_token_ipfs_as_bytes)
+    console.log(ipfs_meta_data_link)
+    console.log('adfafasdf')
+    const ipfs_data = getJsonObject(ipfs_meta_data_link)
     return ipfs_data
   } else {
-    alert("NO NFTS FOUND")
+      alert("NO NFTS FOUND")
   }
-
-
 }
 
-export const helloWorld = async() => {
-  const hw = 'hello world'
-  return hw
+export const getJsonObject = async(ipfs_meta_data_link) => {
+  const meta_data = await $.getJSON(ipfs_meta_data_link)
+  console.log(meta_data)
+  return meta_data
 }
 
 export const reduceAddress = async(address) => {
