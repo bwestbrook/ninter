@@ -22,7 +22,7 @@ const getBeaconInstance = async () => {
 }
 
 export const getBeaconWallet = async () => {
-  console.log('CHECKING BEACON CONECTION NOW')
+  console.log('GETTING EXISTING? BEACON WALLET')
   const wallet = await getBeaconInstance()
   return wallet
 }
@@ -60,17 +60,15 @@ export const getIpfsDict = async(address) => {
   if (owners === address) {
     const all_token_metadata = await storage.token_metadata
     const user_token_metadata = await all_token_metadata.get(user_token_id)
-    console.log(user_token_metadata)
-    const user_token_ipfs_dict = await user_token_metadata.token_info.valueMap
-    console.log(user_token_ipfs_dict)
-    return user_token_ipfs_dict
+    const user_token_ipfs_hash_dict = await user_token_metadata.token_info.valueMap
+    return user_token_ipfs_hash_dict
   } 
 }
 
 export const getIpfsMetaDataJson = async(address) => {
-  const user_token_ipfs_dict = await getIpfsDict(address)
-  if (user_token_ipfs_dict) {
-    const user_token_ipfs_as_bytes = await user_token_ipfs_dict.get(NULL_STR)
+  const user_token_ipfs_hash_dict = await getIpfsDict(address)
+  if (user_token_ipfs_hash_dict) {
+    const user_token_ipfs_as_bytes = await user_token_ipfs_hash_dict.get(NULL_STR)
     const ipfs_meta_data_link = bytes2Char(user_token_ipfs_as_bytes)
     const ipfs_meta_data_json = getJsonObject(ipfs_meta_data_link)
     return ipfs_meta_data_json

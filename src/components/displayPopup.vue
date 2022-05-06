@@ -2,7 +2,7 @@
     <div class="backdrop">
         <div class="modal">
             <img class="mainNftDisplay" ref="displayPng" :src="displayLink">
-            <div class="keyColumn">
+            <div class="attributeFlexContainer">
                 <div class="attribtueDisplay" v-for="key in attributes" :key="key.name">{{key.name}} : {{key.value}}</div>
             </div>
             <a ref="selectedTxl">...</a>
@@ -28,7 +28,6 @@ export default {
 
 <style scoped>
 .modal{
-    width: 400px;
     padding: 20px;
     margin: 100px auto;
     border-radius: 10px;
@@ -42,9 +41,16 @@ export default {
 .mainNftDisplay{
     width: 200px;
 }
+.attributeFlexContainer{
+    display: flex;
+    background: blanchedalmond;
+    flex-wrap: wrap;
+    align-items: center;
+    }
 .attribtueDisplay{
-    width: 200px;
     padding: 2px;
+    height: 100px;
+    flex-basis: 100px;
     margin: 10px auto;
     border-radius: 10px;
     border: 5px;
@@ -52,5 +58,8 @@ export default {
     background: rgb(143, 128, 128);
     font: bold;
     font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
 }
 </style>

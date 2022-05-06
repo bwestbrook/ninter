@@ -1,8 +1,8 @@
 <template>
-    <div ref="walletConnectBar" class="d-flex flex-row">
+    <div ref="walletConnectBar" class="headerForWallet">
         <ul class="navigation">
-            <div ref="connectWalletDisplay"></div>
-            <button @click="displayWalletState" ref="connectWalletButton" class="connect-button">LOAD</button>
+            <div class="connectWalletDisplay" ref="connectWalletDisplay"></div>
+            <button @click="walletState" ref="connectWalletButton" class="connect-button">LOAD</button>
         </ul>
     </div>
 </template>
@@ -13,63 +13,61 @@ import { getBeaconWallet, reduceAddress, disconnectFromBeacon } from '../service
 
 var reduced_address;
 
-
 export default {
+    data () {
+        const connectToBeacon = this.$emit("toggleConnectToBeacon")
+        const localConnectToBeacon = connectToBeacon
+        return {
+            localConnectToBeacon
+        }
+    },
     emits:[
         "addressReady",
-        "toggleConnectToBeacon"
+        "toggleConnectToBeacon",
+        "hideNft"
     ],
     beforeMount() {
-        this.displayWalletState()
+        this.walletState()
     },
     props: [
         "connectToBeacon",
         "walletConnected"
     ],
     methods: {
-        async walletState() {
-            if (this.$refs.connectWalletButton.innerText === "CONNECT") {
-                console.log('it was clicked to toggle Beacon')
-                console.log(this.connectToBeacon)
-                console.log(this.$emit("toggleConnectToBeacon"))
-                const connectToBeacon = this.$emit("toggleConnectToBeacon")
-                console.log(connectToBeacon)
-                this.displayWalletState('false', 'false')
-            } 
+        async displayWalletState(activeAccount) {
+            const address = await activeAccount.address
+            console.log(address)
+            reduced_address = await reduceAddress(address)
+            this.$refs.connectWalletDisplay.innerText = reduced_address
+            this.$refs.connectWalletButton.innerText = "DISCONNECT"
+            this.reduced_address = reduced_address
+            this.setAddress = address
+            console.log(this.$emit('addressReady', address))
         },
-        async displayWalletState() {
+        async walletState() {
             const wallet = await getBeaconWallet();
             const activeAccount = await wallet.client.getActiveAccount()
-            if (this.$refs.connectWalletButton.innerText === "DISCONNECT" && activeAccount) {
-                await disconnectFromBeacon()
-                this.$refs.connectWalletDisplay.innerText = '...'
-                this.$refs.connectWalletButton.innerText = "CONNECT"
-                console.log(this.$emit('addressReady', ""))
-            } else if (this.$refs.connectWalletButton.innerText === "LOAD") {
-                this.$refs.connectWalletButton.innerText = "CONNECT"
-            } else {
+            console.log(activeAccount)
+            if (this.$refs.connectWalletButton.innerText === "CONNECT" && !activeAccount) {
+                const perms = await wallet.requestPermissions()
+                console.log(perms)
                 const activeAccount = await wallet.client.getActiveAccount()
-                if (!activeAccount) {
-                    await wallet.requestPermissions()
-                    const activeAccount = await wallet.client.getActiveAccount()
-                    const address = await activeAccount.address
-                    reduced_address = await reduceAddress(address)
-                    this.$refs.connectWalletDisplay.innerText = reduced_address
-                    this.$refs.connectWalletButton.innerText = "DISCONNECT"
-                    this.reduced_address = reduced_address
-                    this.setAddress = address
-                    console.log(this.$emit('addressReady', address))
-                } else {
-                    const activeAccount = await wallet.client.getActiveAccount()
-                    const address = await activeAccount.address
-                    reduced_address = await reduceAddress(address)
-                    this.$refs.connectWalletDisplay.innerText = reduced_address
-                    this.$refs.connectWalletButton.innerText = "DISCONNECT"
-                    this.reduced_address = reduced_address
-                    this.setAddress = address
-                    console.log(this.$emit('addressReady', address))
-                }
-
+                this.displayWalletState(activeAccount)
+            } else if (this.$refs.connectWalletButton.innerText === "DISCONNECT" && activeAccount) {
+                await disconnectFromBeacon()
+                this.$refs.connectWalletButton.innerText = "CONNECT"
+                this.$refs.connectWalletDisplay.innerText = "..."
+                console.log(this.$emit('addressReady', "..."))
+                this.$emit("hideNft")
+            } else if (this.$refs.connectWalletButton.innerText === "LOAD" && activeAccount) {
+                this.displayWalletState(activeAccount)
+            } else if (this.$refs.connectWalletButton.innerText === "LOAD" && !activeAccount) {
+                this.$refs.connectWalletButton.innerText = "CONNECT"
+                this.$refs.connectWalletDisplay.innerText = "..."
+            } else if (activeAccount) {
+                this.displayWalletState(activeAccount)
+            } else {
+                console.log("no action")
             }
         }
     }
@@ -85,6 +83,9 @@ export default {
   margin: 100px auto;
   border-radius: 10px;
 }
+.connectWalletDisplay{
+  color: #f0f8ff;
+    }
 .backdrop {
   top: 0;
   background: rgb(0.1, 0.1, 0.1);
@@ -111,5 +112,9 @@ export default {
 .display-address{
     padding: 20px;
     border: 5px;
+}
+.headerForWallet{
+    display: flex;
+    justify-content: end;
 }
 </style>
