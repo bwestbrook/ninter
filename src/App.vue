@@ -1,9 +1,10 @@
 <template>
   <div class="mainBackground">
-    <walletConnect class="walletConnect" :connectToBeacon="connectToBeacon" :walletConnected="walletConnected" @hideNft="hideNft" @addressReady="addressReady" @toggleConnectToBeacon="toggleConnectToBeacon" />
-    <inputSection class="inputSection" :setAddress="setAddress" @addressReady="addressReady" @nftReady="nftReady" @hideNft="hideNft" />
+    <div class="walletConnectDiv">
+      <walletConnect :connectToBeacon="connectToBeacon" :walletConnected="walletConnected" @hideNft="hideNft" @nftReady="nftReady" @addressReady="addressReady" @toggleConnectToBeacon="toggleConnectToBeacon" />
+    </div>
     <div v-if="showModal"> 
-        <displayPopup :displayLink="displayLink" :attributes="attributes" />
+      <displayPopup :displayLink="displayLink" :attributes="attributes" />
     </div>
   </div>
 </template>
@@ -11,13 +12,12 @@
 <script>
 
 import walletConnect from "./components/walletConnect.vue"
-import inputSection from "./components/inputSection.vue"
 import displayPopup from "./components/displayPopup.vue"
 
 
 export default {
   name: 'App',
-  components: { walletConnect, inputSection, displayPopup },
+  components: { walletConnect, displayPopup },
   data () {
     return {
       setAddress: "yolo",
@@ -76,12 +76,16 @@ export default {
   color: #2c3e50;
   margin-top: 0px;
 }
-.walletConnect{
+.walletConnectDiv{
   background: #2c3e50;
+  display: flex;
   padding-bottom: 5px;
+  justify-content: end;
 }
-.inputSection{
+.inputSectionDiv{
   background: green;
+  display: flex;
+  justify-content: end;
 }
 .customHeader{
   border-bottom: 2px solid #ddd;
@@ -94,7 +98,7 @@ export default {
   padding-bottom: 2px;
   border-radius: 2px;
   background: rgb(170, 158, 158);
-  width: 100%;
+  width: 90%;
   height: 100%;
 }
 </style>

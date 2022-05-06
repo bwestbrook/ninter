@@ -1,15 +1,14 @@
 <template>
-    <h1 class="customHeader" > Welcome to the 2.725K 2.0 Minter!</h1>
-    <div class="display-address" ref="displayAddress"> </div>
-    <input class="addressInput" type="text" ref="inputAddress" :value="setAddress">
-    <button @click="displayNftData" ref="getDataButton">Check Account for 2.725Ks</button> 
+    <div class="displayAddressDiv" ref="displayAddress"> 
+        <input class="addressInput" ref="inputAddress" type="text" :value="setAddress">
+        <button @click="displayNftData" ref="getDataButton">Check Account for 2.725Ks</button> 
+    </div>
 </template>
 
 <script>
 import { IPFS_HTTPS_LINK } from '@/constants.js'
 import { getIpfsMetaDataJson } from '../services/beacon-services.js'
-//import { IPFS_HTTPS_LINK } from '@/constants.js'
-//import { getIpfsMetaDataJson, getMyAddress, reduceAddress } from '../services/beacon-services.js'
+
 
 export default {
     data () {
@@ -40,8 +39,15 @@ export default {
 </script>
 
 <style>
+.displayAddressDiv{
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    background-color: aqua;
+}
 .addressInput{
-    width: 220px;
+    display: flex;
+    min-width: 300px;
     border-radius: 3px;
 }
 .customHeader{

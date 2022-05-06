@@ -1,6 +1,7 @@
 <template>
     <div class="backdrop">
         <div class="modal">
+            <div>{{description}}</div>
             <img class="mainNftDisplay" ref="displayPng" :src="displayLink">
             <div class="attributeFlexContainer">
                 <div class="attribtueDisplay" v-for="key in attributes" :key="key.name">{{key.name}} : {{key.value}}</div>
@@ -12,10 +13,17 @@
 
 <script>
 
+import { PROJECT_DESCRIPTION } from '../constants.js'
+
 export default {
+    data () {
+        return {
+            description: PROJECT_DESCRIPTION
+        }
+    },
     props: [
         "attributes",
-        "displayLink"
+        "displayLink",
         ],
     methods: {
         closeModal() {

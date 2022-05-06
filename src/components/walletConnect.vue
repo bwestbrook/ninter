@@ -1,15 +1,25 @@
 <template>
-    <div ref="walletConnectBar" class="headerForWallet">
-        <ul class="navigation">
-            <div class="connectWalletDisplay" ref="connectWalletDisplay"></div>
-            <button @click="walletState" ref="connectWalletButton" class="connect-button">LOAD</button>
-        </ul>
+    <div class="navigationBarFlex">
+        <div class="navBarTitle">{{title}}</div>
+        <div class="wallConnectFlex">
+            <div class="connectButton" @click="walletState" ref="connectWalletButton" >LOAD</div>
+            <div class="walletFlexItem" ref="addressDisplay"></div>
+            <div class="walletFlexItem" ref="balanceDisplay"></div>
+            <div class="connectButton" @click="getOwnedNfts" ref="getDataButton">Check Account for 2.725Ks</div>
+            <input class="addressInput" ref="inputAddress" type="text" placeholder="Enter Alternate Address...">
+        </div>
     </div>
 </template>
 
 <script>
 
-import { getBeaconWallet, reduceAddress, disconnectFromBeacon } from '../services/beacon-services.js'
+import { getBeaconWallet, reduceAddress, getIpfsMetaDataJson, getKalamintData, disconnectFromBeacon } from '../services/beacon-services.js'
+import { IPFS_HTTPS_LINK, TXL_NFT_CONTRACT, NODE_URL } from '../constants'
+import { TezosToolkit } from '@taquito/taquito'
+
+
+const Tezos = new TezosToolkit(NODE_URL);
+
 
 var reduced_address;
 
@@ -18,13 +28,17 @@ export default {
         const connectToBeacon = this.$emit("toggleConnectToBeacon")
         const localConnectToBeacon = connectToBeacon
         return {
+            setAddress: "",
+            title: "Welcome to TXL 2.725K Minter!",
             localConnectToBeacon
         }
     },
     emits:[
         "addressReady",
         "toggleConnectToBeacon",
-        "hideNft"
+        "toggleModal",
+        "hideNft",
+        "nftReady"
     ],
     beforeMount() {
         this.walletState()
@@ -36,13 +50,16 @@ export default {
     methods: {
         async displayWalletState(activeAccount) {
             const address = await activeAccount.address
-            console.log(address)
+            console.log(activeAccount)
+            const balance = await Tezos.rpc.getBalance(address)
+            console.log(balance)
+            const balance_num = (balance.toNumber() * 1e-6).toFixed(3) // mutez to Tez 
             reduced_address = await reduceAddress(address)
-            this.$refs.connectWalletDisplay.innerText = reduced_address
+            this.$refs.addressDisplay.innerText = 'Addr: ' + reduced_address
+            this.$refs.balanceDisplay.innerText = 'Bal: ' + balance_num + ' $XTZ'
             this.$refs.connectWalletButton.innerText = "DISCONNECT"
             this.reduced_address = reduced_address
             this.setAddress = address
-            console.log(this.$emit('addressReady', address))
         },
         async walletState() {
             const wallet = await getBeaconWallet();
@@ -55,20 +72,57 @@ export default {
                 this.displayWalletState(activeAccount)
             } else if (this.$refs.connectWalletButton.innerText === "DISCONNECT" && activeAccount) {
                 await disconnectFromBeacon()
-                this.$refs.connectWalletButton.innerText = "CONNECT"
-                this.$refs.connectWalletDisplay.innerText = "..."
-                console.log(this.$emit('addressReady', "..."))
+                this.resetWalletUiState()
                 this.$emit("hideNft")
             } else if (this.$refs.connectWalletButton.innerText === "LOAD" && activeAccount) {
                 this.displayWalletState(activeAccount)
             } else if (this.$refs.connectWalletButton.innerText === "LOAD" && !activeAccount) {
-                this.$refs.connectWalletButton.innerText = "CONNECT"
-                this.$refs.connectWalletDisplay.innerText = "..."
+                this.resetWalletUiState()
             } else if (activeAccount) {
                 this.displayWalletState(activeAccount)
             } else {
                 console.log("no action")
             }
+        },
+        resetWalletUiState () {
+            this.$refs.connectWalletButton.innerText = "CONNECT"
+            this.$refs.addressDisplay.innerText = "Addr: ..."
+            this.$refs.balanceDisplay.innerText = "Bal: ..."
+        },
+        async getOwnedNfts() {
+            const wallet = await getBeaconWallet();
+            const activeAccount = await wallet.client.getActiveAccount()
+            if (activeAccount) {
+                const kala_storage = await getKalamintData()
+                console.log('kala_storage')
+                //const tokens = await kala_storage.tokens
+                //const exampleNft = await tokens.get(60696)
+                const collections = await kala_storage.collections
+                //const exampleNft = await tokens.get(60696)
+                for (let i = 0; i < 6000; i++) {
+                    console.log(i)
+                    const current_collection = await kala_storage.collections.get(i)
+                    console.log(current_collection.length)
+                    if (current_collection.length === 272) {
+                        console.log('found collection of 272 at collection', i)
+                        console.log(current_collection)
+                    }
+                }
+                console.log(collections)
+                //console.log(exampleNft)
+            }
+        },
+        async displayNftData() {
+            const wallet = await getBeaconWallet();
+            const activeAccount = await wallet.client.getActiveAccount()
+            if (activeAccount) {
+                const address = await activeAccount.address
+                const ipfs_meta_data_json = await getIpfsMetaDataJson(address, TXL_NFT_CONTRACT)
+                const displayLink = IPFS_HTTPS_LINK + ipfs_meta_data_json.artifactUri.split('//')[1]
+                this.$emit("nftReady", ipfs_meta_data_json.attributes, displayLink)
+                this.$emit("toggleModal")
+            }
+
         }
     }
 }
@@ -83,35 +137,63 @@ export default {
   margin: 100px auto;
   border-radius: 10px;
 }
-.connectWalletDisplay{
-  color: #f0f8ff;
-    }
 .backdrop {
   top: 0;
   background: rgb(0.1, 0.1, 0.1);
   width: 100%;
   height: 100%;
 }
-.navigation {
+.navigationBarFlex {
+    flex-shrink: 50;
+    padding: 20px;
+    width: 100%;
+    border: 5px;
+    display: flex;
+    border-radius: 4px;
+    background: burlywood;
+    justify-content: end;
+}
+.wallConnectFlex {
+    flex-shrink: 1;
     padding: 20px;
     border: 5px;
-    display: inline-flex;
+    display: flex;
     border-radius: 4px;
-    list-style-type: none;
-}
-.connect-button{
-    padding: 2px;
-    border: 50px;
-    border-radius: 4px;
-    background: rgb(28, 51, 121);
-    color:aliceblue;
-    justify-content: center;
-    align-content: center;
+    background: burlywood;
     flex-direction: column;
 }
-.display-address{
+.walletFlexItem{
+    color: #2f77b5;
+    background: rgb(1, 10, 10);
+    background-color: #f4f4f4; 
+    margin: 2px; 
+    text-align: center; 
+    border-radius: 4px;
+    max-width: 300px;
+    padding: 5px;
+    font-size: 20px; 
+}
+.connectButton{
+    padding: 5px;
+    border: 50px;
+    border-radius: 4px;
+    min-width: 200px;
+    margin: 2px; 
+    background: rgb(150, 31, 193);
+    color:aliceblue;
+}
+.displayAddress{
     padding: 20px;
     border: 5px;
+}
+.addressInput {
+    font-size: 9.5px;
+}
+.navBarTitle{
+    padding: 20px;
+    border: 5px;
+    font-size: xx-large;
+    width: 800px;
 }
 .headerForWallet{
     display: flex;

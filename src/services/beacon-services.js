@@ -1,8 +1,7 @@
 import { BeaconWallet } from '@taquito/beacon-wallet'
 import { TezosToolkit } from '@taquito/taquito'
 import { bytes2Char } from '@taquito/utils'
-import { NODE_URL, NFT_CONTRACT, NULL_STR } from '../constants'
-
+import { KALAMINT_CONTRACT, NODE_URL, NULL_STR } from '../constants'
 import $ from 'jquery'
 
 const Tezos = new TezosToolkit(NODE_URL);
@@ -45,14 +44,25 @@ export const getMyNfts = async () => {
   return activeAccountStr
 }
 
-export const getContractStorage = async() => {
-  const contract = await Tezos.wallet.at(NFT_CONTRACT)
+export const getContractStorage = async(nft_contract_address) => {
+  const contract = await Tezos.wallet.at(nft_contract_address)
   const storage = await contract.storage()
   return storage
 }
 
-export const getIpfsDict = async(address) => {
-  const storage = await getContractStorage()
+export const getKalamintData = async(address) => {
+  console.log(address)
+  const contract = await Tezos.wallet.at(KALAMINT_CONTRACT)
+  console.log(contract)
+
+  const storage = await contract.storage()
+  console.log(storage)
+  console.log(storage)
+  return storage
+}
+
+export const getIpfsDict = async(address, contract) => {
+  const storage = await getContractStorage(contract)
   console.log(address)
   const user_token_id = 0
   const ledger = await storage.ledger
@@ -65,8 +75,8 @@ export const getIpfsDict = async(address) => {
   } 
 }
 
-export const getIpfsMetaDataJson = async(address) => {
-  const user_token_ipfs_hash_dict = await getIpfsDict(address)
+export const getIpfsMetaDataJson = async(address, contract) => {
+  const user_token_ipfs_hash_dict = await getIpfsDict(address, contract)
   if (user_token_ipfs_hash_dict) {
     const user_token_ipfs_as_bytes = await user_token_ipfs_hash_dict.get(NULL_STR)
     const ipfs_meta_data_link = bytes2Char(user_token_ipfs_as_bytes)
