@@ -6,6 +6,7 @@
             <div class="walletFlexItem" ref="addressDisplay"></div>
             <div class="walletFlexItem" ref="balanceDisplay"></div>
             <div class="connectButton" @click="getOwnedNfts" ref="getDataButton">Check Account for 2.725Ks</div>
+            <div class="connectButton" @click="getOwnedNfts2" ref="getDataButton">Check Account for 2.725Ks 2.0</div>
             <input class="addressInput" ref="inputAddress" type="text" placeholder="Enter Alternate Address...">
         </div>
     </div>
@@ -13,7 +14,7 @@
 
 <script>
 
-import { getBeaconWallet, reduceAddress, getIpfsMetaDataJson, getKalamintData, disconnectFromBeacon } from '../services/beacon-services.js'
+import { getBeaconWallet, reduceAddress, getIpfsMetaDataJson, getKalamintTokens, disconnectFromBeacon } from '../services/beacon-services.js'
 import { IPFS_HTTPS_LINK, TXL_NFT_CONTRACT, NODE_URL } from '../constants'
 import { TezosToolkit } from '@taquito/taquito'
 
@@ -48,23 +49,23 @@ export default {
         "walletConnected"
     ],
     methods: {
+        resetWalletUiState () {
+            this.$refs.connectWalletButton.innerText = "CONNECT"
+            this.$refs.addressDisplay.innerText = "Addr: ..."
+            this.$refs.balanceDisplay.innerText = "Bal: ..."
+        },
         async displayWalletState(activeAccount) {
             const address = await activeAccount.address
-            console.log(activeAccount)
             const balance = await Tezos.rpc.getBalance(address)
-            console.log(balance)
             const balance_num = (balance.toNumber() * 1e-6).toFixed(3) // mutez to Tez 
             reduced_address = await reduceAddress(address)
             this.$refs.addressDisplay.innerText = 'Addr: ' + reduced_address
             this.$refs.balanceDisplay.innerText = 'Bal: ' + balance_num + ' $XTZ'
             this.$refs.connectWalletButton.innerText = "DISCONNECT"
-            this.reduced_address = reduced_address
-            this.setAddress = address
         },
         async walletState() {
             const wallet = await getBeaconWallet();
             const activeAccount = await wallet.client.getActiveAccount()
-            console.log(activeAccount)
             if (this.$refs.connectWalletButton.innerText === "CONNECT" && !activeAccount) {
                 const perms = await wallet.requestPermissions()
                 console.log(perms)
@@ -84,32 +85,26 @@ export default {
                 console.log("no action")
             }
         },
-        resetWalletUiState () {
-            this.$refs.connectWalletButton.innerText = "CONNECT"
-            this.$refs.addressDisplay.innerText = "Addr: ..."
-            this.$refs.balanceDisplay.innerText = "Bal: ..."
-        },
         async getOwnedNfts() {
             const wallet = await getBeaconWallet();
             const activeAccount = await wallet.client.getActiveAccount()
             if (activeAccount) {
-                const kala_storage = await getKalamintData()
-                console.log('kala_storage')
-                //const tokens = await kala_storage.tokens
-                //const exampleNft = await tokens.get(60696)
-                const collections = await kala_storage.collections
-                //const exampleNft = await tokens.get(60696)
-                for (let i = 0; i < 6000; i++) {
-                    console.log(i)
-                    const current_collection = await kala_storage.collections.get(i)
-                    console.log(current_collection.length)
-                    if (current_collection.length === 272) {
-                        console.log('found collection of 272 at collection', i)
-                        console.log(current_collection)
-                    }
-                }
-                console.log(collections)
+                const tokens  = await getKalamintTokens()
+                const exampleNft = await tokens.get()
+                console.log(exampleNft)
                 //console.log(exampleNft)
+            }
+        },
+        async getOwnedNfts2() {
+            const wallet = await getBeaconWallet();
+            const activeAccount = await wallet.client.getActiveAccount()
+            if (activeAccount) {
+                const address = activeAccount.address
+                const ipfs_meta_data_json = await getIpfsMetaDataJson(address, TXL_NFT_CONTRACT)
+                console.log(ipfs_meta_data_json)
+                this.attributes = ipfs_meta_data_json.attributes
+                console.log(this.attributes)
+                this.displayNftData()
             }
         },
         async displayNftData() {
@@ -119,6 +114,7 @@ export default {
                 const address = await activeAccount.address
                 const ipfs_meta_data_json = await getIpfsMetaDataJson(address, TXL_NFT_CONTRACT)
                 const displayLink = IPFS_HTTPS_LINK + ipfs_meta_data_json.artifactUri.split('//')[1]
+                console.log(ipfs_meta_data_json.attributes)
                 this.$emit("nftReady", ipfs_meta_data_json.attributes, displayLink)
                 this.$emit("toggleModal")
             }
@@ -151,7 +147,7 @@ export default {
     display: flex;
     border-radius: 4px;
     background: burlywood;
-    justify-content: end;
+    justify-content: flex-end;
 }
 .wallConnectFlex {
     flex-shrink: 1;
@@ -197,6 +193,6 @@ export default {
 }
 .headerForWallet{
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 }
 </style>

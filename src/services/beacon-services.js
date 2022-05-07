@@ -50,15 +50,13 @@ export const getContractStorage = async(nft_contract_address) => {
   return storage
 }
 
-export const getKalamintData = async(address) => {
-  console.log(address)
+export const getKalamintTokens = async() => {
   const contract = await Tezos.wallet.at(KALAMINT_CONTRACT)
   console.log(contract)
 
   const storage = await contract.storage()
-  console.log(storage)
-  console.log(storage)
-  return storage
+  const tokens = await storage.tokens
+  return tokens
 }
 
 export const getIpfsDict = async(address, contract) => {

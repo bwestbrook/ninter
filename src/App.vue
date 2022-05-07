@@ -3,9 +3,7 @@
     <div class="walletConnectDiv">
       <walletConnect :connectToBeacon="connectToBeacon" :walletConnected="walletConnected" @hideNft="hideNft" @nftReady="nftReady" @addressReady="addressReady" @toggleConnectToBeacon="toggleConnectToBeacon" />
     </div>
-    <div v-if="showModal"> 
-      <displayPopup :displayLink="displayLink" :attributes="attributes" />
-    </div>
+    <displayPopup :displayLink="displayLink" :attributes="attributes" @loadTxl="loadTxl" />
   </div>
 </template>
 
@@ -13,6 +11,8 @@
 
 import walletConnect from "./components/walletConnect.vue"
 import displayPopup from "./components/displayPopup.vue"
+import { getKalamintTokens, reduceAddress } from './services/beacon-services.js'
+import { ID_LOOKUP, IPFS_HTTPS_LINK, OBJKT_CONTRACT } from './constants.js'
 
 
 export default {
@@ -22,16 +22,50 @@ export default {
     return {
       setAddress: "yolo",
       connectToBeacon: false,
-      showModal: false,
+      showModal: true,
       walletConnected: false,
       displayLink: "adfdsaf",
-      attributes: ["DF", 3, 'a']
+      attributes: [
+        {'id': 0},
+        {'for_sale': false},
+        {'rank': 'na'}
+        ]
     }
   },
   beforeMount() {
     this.addressReady()
+    this.loadTxl(272)
   },
   methods: {
+    async loadTxl(token_id) {
+      if (token_id < 0  || token_id > 272) {
+        alert("Please insert token ID between 1 and 272")
+        return
+      }
+      token_id = ('0000'+token_id).slice(-3);
+      console.log(token_id)
+      const kalamint_token_id = ID_LOOKUP[token_id]
+      console.log(kalamint_token_id)
+      const tokens = await getKalamintTokens()
+      const thisTxl = await tokens.get(kalamint_token_id)
+      let owner = thisTxl.owner
+      if (owner === OBJKT_CONTRACT) {
+        console.log("NFT FOR SALE")
+        owner = '4SALE ON OBJKT'
+      } else {
+        owner = await reduceAddress(owner)
+      }
+      const displayLink = IPFS_HTTPS_LINK + thisTxl.ipfs_hash.split('//')[1]
+      this.displayLink = displayLink
+      this.attributes = [
+        {name: 'Kala ID', value: kalamint_token_id},
+        {name: 'TXL ID', value: token_id},
+        {name: 'owner', value: owner},
+        {name: 'TXL Version', value: 1.0}
+      ]
+      console.log(this.attributes)
+      console.log(this.displayLink)
+    },
     getTxlData() {
       console.log(this.title)
       console.log(this.$refs.txlId)
@@ -80,12 +114,12 @@ export default {
   background: #2c3e50;
   display: flex;
   padding-bottom: 5px;
-  justify-content: end;
+  justify-content: flex-end;
 }
 .inputSectionDiv{
   background: green;
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 .customHeader{
   border-bottom: 2px solid #ddd;
