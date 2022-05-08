@@ -1,8 +1,8 @@
 import { BeaconWallet } from '@taquito/beacon-wallet'
 import { TezosToolkit } from '@taquito/taquito'
 import { bytes2Char } from '@taquito/utils'
-import { KALAMINT_CONTRACT, NODE_URL, NULL_STR } from '../constants'
-import $ from 'jquery'
+import { KALAMINT_CONTRACT, NODE_URL, NULL_STR, ID_LOOKUP } from '../constants'
+import { getJsonObjectFromString } from './utilities';
 
 const Tezos = new TezosToolkit(NODE_URL);
 
@@ -50,13 +50,30 @@ export const getContractStorage = async(nft_contract_address) => {
   return storage
 }
 
-export const getKalamintTokens = async() => {
+export const getAllKalamintTokens = async() => {
   const contract = await Tezos.wallet.at(KALAMINT_CONTRACT)
   console.log(contract)
-
   const storage = await contract.storage()
   const tokens = await storage.tokens
   return tokens
+}
+
+export const getKalamintTxlTokens = async() => {
+  const all_tokens = await getAllKalamintTokens()
+  var kalamintTxls = []  
+  let id = 1
+  for (id = 1; id <= 78; ++id) {
+    console.log('buiding')
+    console.log(id)
+    const zero_filled = ('0000'+id).slice(-3)
+    let token_id = ID_LOOKUP[zero_filled]
+    if (token_id) {
+      const txl = await all_tokens.get(token_id)
+      kalamintTxls[id - 1] = txl
+      console.log(kalamintTxls)
+    }
+  }
+  return kalamintTxls
 }
 
 export const getIpfsDict = async(address, contract) => {
@@ -78,23 +95,10 @@ export const getIpfsMetaDataJson = async(address, contract) => {
   if (user_token_ipfs_hash_dict) {
     const user_token_ipfs_as_bytes = await user_token_ipfs_hash_dict.get(NULL_STR)
     const ipfs_meta_data_link = bytes2Char(user_token_ipfs_as_bytes)
-    const ipfs_meta_data_json = getJsonObject(ipfs_meta_data_link)
+    const ipfs_meta_data_json = getJsonObjectFromString(ipfs_meta_data_link)
     return ipfs_meta_data_json
   } else {
       alert("No NFTs for address", address)
   }
 }
-
-export const getJsonObject = async(ipfs_meta_data_link) => {
-  const meta_data = await $.getJSON(ipfs_meta_data_link)
-  console.log(meta_data)
-  return meta_data
-}
-
-export const reduceAddress = async(address) => {
-  return address.substring(0, 4) + '..' + address.substring(address.length - 4)
-}
-
-
-
 

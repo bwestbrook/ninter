@@ -1,81 +1,61 @@
 <template>
-  <div class="mainBackground">
-    <div class="walletConnectDiv">
-      <walletConnect :connectToBeacon="connectToBeacon" :walletConnected="walletConnected" @hideNft="hideNft" @nftReady="nftReady" @addressReady="addressReady" @toggleConnectToBeacon="toggleConnectToBeacon" />
+  <div class="mainFlex">
+    <div>
+      <walletConnect 
+        :connectToBeacon="connectToBeacon" :walletConnected="walletConnected" 
+        @hideNft="hideNft" @addressReady="addressReady" @loggedOut="clearOwnedTxls"
+        @toggleConnectToBeacon="toggleConnectToBeacon" 
+      />
     </div>
-    <displayPopup :displayLink="displayLink" :attributes="attributes" @loadTxl="loadTxl" />
+    <displayTxl 
+        :displayLink="displayLink" :attributes="attributes" :objktUrl="objktUrl" 
+        :loadedTxl="loadedTxl" :ownedTxls="ownedTxls" @loadTxl="loadTxl" @canBuyOnObjkt="canBuyOnObjkt"
+    />
   </div>
 </template>
 
 <script>
 
 import walletConnect from "./components/walletConnect.vue"
-import displayPopup from "./components/displayPopup.vue"
-import { getKalamintTokens, reduceAddress } from './services/beacon-services.js'
+import displayTxl from "./components/displayTxl.vue"
+import { getAllKalamintTokens } from './services/tezos-services.js'
+import { reduceAddress, zeroFillId } from './services/utilities.js'
 import { ID_LOOKUP, IPFS_HTTPS_LINK, OBJKT_CONTRACT } from './constants.js'
 
 
 export default {
   name: 'App',
-  components: { walletConnect, displayPopup },
+  components: { walletConnect, displayTxl },
   data () {
     return {
       setAddress: "yolo",
       connectToBeacon: false,
       showModal: true,
+      loadedTxl: -1,
+      kalaTxls: [
+      ],
+      ownedTxls: [
+        ],
       walletConnected: false,
-      displayLink: "adfdsaf",
+      objktUrl: "", 
+      displayLink: "",
       attributes: [
-        {'id': 0},
-        {'for_sale': false},
-        {'rank': 'na'}
-        ]
+        {name: 'TXL Version', value: 1.0},
+        {name: 'TXL ID', value: 1},
+        {name: 'owner', value: ""},
+        {name: 'Kala ID', value: 0}
+      ]
     }
   },
   beforeMount() {
     this.addressReady()
-    this.loadTxl(272)
+
+    this.getAllTxlKalamintTokens()
   },
   methods: {
-    async loadTxl(token_id) {
-      if (token_id < 0  || token_id > 272) {
-        alert("Please insert token ID between 1 and 272")
-        return
-      }
-      token_id = ('0000'+token_id).slice(-3);
-      console.log(token_id)
-      const kalamint_token_id = ID_LOOKUP[token_id]
-      console.log(kalamint_token_id)
-      const tokens = await getKalamintTokens()
-      const thisTxl = await tokens.get(kalamint_token_id)
-      let owner = thisTxl.owner
-      if (owner === OBJKT_CONTRACT) {
-        console.log("NFT FOR SALE")
-        owner = '4SALE ON OBJKT'
-      } else {
-        owner = await reduceAddress(owner)
-      }
-      const displayLink = IPFS_HTTPS_LINK + thisTxl.ipfs_hash.split('//')[1]
-      this.displayLink = displayLink
-      this.attributes = [
-        {name: 'Kala ID', value: kalamint_token_id},
-        {name: 'TXL ID', value: token_id},
-        {name: 'owner', value: owner},
-        {name: 'TXL Version', value: 1.0}
-      ]
-      console.log(this.attributes)
-      console.log(this.displayLink)
-    },
-    getTxlData() {
-      console.log(this.title)
-      console.log(this.$refs.txlId)
-      this.$refs.txlId.classList.add("active")
-      this.$refs.txlId.focus()
-      const new_id = this.$refs.txlId.value
-      this.$refs.selectedTxl.innerText = new_id 
-    },
-    hideNft() {
-      this.showModal = false
+    canBuyOnObjkt (objkt_link) {
+      this.objktUrl = objkt_link
+      console.log(this.objktUrl)
     },
     toggleConnectToBeacon() {
       if (!this.connectToBeacon) {
@@ -88,14 +68,75 @@ export default {
     },
     addressReady(address='') {
       this.setAddress = address
+      this.updateTxlLedger()
     },
-    nftReady(attributes, displayLink) {
-      console.log("nftReady")
-      console.log(displayLink)
-      console.log(attributes)
-      this.showModal = true
+    async updateTxlLedger () {
+      let txl_id = 1
+      this.ownedTxls = []
+      for (txl_id; txl_id <= 272; ++txl_id) {
+        const zero_filled_txl_id = zeroFillId(txl_id)
+        const thisTxl = this.kalaTxls[txl_id - 1]
+        if (this.kalaTxls[txl_id - 1]) {
+          const thisTxlOwner = thisTxl.owner
+          if (thisTxlOwner === this.setAddress) {
+            const index = this.ownedTxls.length
+            this.ownedTxls[index] = {name: zero_filled_txl_id, value: txl_id}
+          }
+        }
+      }
+    },
+    clearOwnedTxls () {
+      this.ownedTxls = []
+      this.setAddress = ""
+    },
+    async getAllTxlKalamintTokens () {
+      const kala_tokens = await getAllKalamintTokens()
+      let txl_id = 1
+      for (txl_id; txl_id <= 272; ++txl_id) {
+        const zero_filled_txl_id = zeroFillId(txl_id)
+        let kala_token_id = ID_LOOKUP[zero_filled_txl_id]
+        try {
+          const thisTxl = await kala_tokens.get(kala_token_id)
+          this.kalaTxls[txl_id - 1] = thisTxl
+          this.updateTxlLedger()
+        }
+        catch (e) {
+          console.log(e)
+          this.kalaTxls[txl_id - 1] = undefined
+          //this.updateTxlLedger(txl_id, undefined)
+        }
+        this.loadedTxl = txl_id
+      }
+    },
+    async loadTxl(token_id) {
+      if (token_id < 0  || token_id > 272) {
+        alert("Please insert token ID between 1 and 272")
+        return
+      }
+      const zero_filled_token_id = ('0000'+token_id).slice(-3);
+      const kalamint_token_id = ID_LOOKUP[zero_filled_token_id]
+      const kalamint_tokens = await getAllKalamintTokens()
+
+      const thisTxl = await kalamint_tokens.get(kalamint_token_id)
+      let owner = thisTxl.owner
+      if (owner === OBJKT_CONTRACT) {
+        owner = 'OBJKT MKTPLC'
+      } else {
+        owner = await reduceAddress(owner)
+      }
+      const displayLink = IPFS_HTTPS_LINK + thisTxl.ipfs_hash.split('//')[1]
       this.displayLink = displayLink
-      this.attributes = attributes
+      this.attributes = [
+        {name: 'TXL Version', value: 1.0},
+        {name: 'TXL ID', value: token_id},
+        {name: 'owner', value: owner},
+        {name: 'Kala ID', value: kalamint_token_id}
+      ]
+      console.log(this.attributes)
+      console.log(this.displayLink)
+    },
+    hideNft() {
+      this.showModal = false
     }
   }
 }
@@ -109,12 +150,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 0px;
-}
-.walletConnectDiv{
-  background: #2c3e50;
-  display: flex;
-  padding-bottom: 5px;
-  justify-content: flex-end;
+  width: 100%;
 }
 .inputSectionDiv{
   background: green;
@@ -132,7 +168,15 @@ export default {
   padding-bottom: 2px;
   border-radius: 2px;
   background: rgb(170, 158, 158);
-  width: 90%;
+  width: 100%;
   height: 100%;
+}
+.mainFlex {
+    padding: 20px;
+    border: 5px;
+    display: flex;
+    border-radius: 4px;
+    background: grey;
+    flex-direction: column;
 }
 </style>
