@@ -1,11 +1,15 @@
 <template>
     <div class="navigationBarFlex">
         <div class="navBarTitle">{{title}}</div>
-        <div class="wallConnectFlex">
-            <div class="connectButton" @click="walletState" ref="connectWalletButton" >LOAD</div>
-            <div class="walletFlexItem" ref="addressDisplay"></div>
+        <div class="genericFlex">
             <div class="walletFlexItem" ref="balanceDisplay"></div>
+            <div class="walletFlexItem" ref="txlBalanceDisplay"> 2.725K Bal: {{ownedTxls.length}} </div>
         </div>
+        <div class="genericFlex">
+            <div class="walletFlexItem" @click="walletState" ref="connectWalletButton" >LOAD</div>
+            <div class="walletFlexItem" ref="addressDisplay"></div>
+        </div>
+
     </div>
 </template>
 
@@ -27,7 +31,7 @@ export default {
         const localConnectToBeacon = connectToBeacon
         return {
             setAddress: "",
-            title: "Welcome to TXL 2.725K Explorer!",
+            title: "Welcome to the TXL 2.725K Explorer!",
             localConnectToBeacon
         }
     },
@@ -45,13 +49,16 @@ export default {
     },
     props: [
         "connectToBeacon",
-        "walletConnected"
+        "walletConnected",
+        "ownedTxls",
+        "nOwnedTxls"
     ],
     methods: {
         resetWalletUiState () {
             this.$refs.connectWalletButton.innerText = "CONNECT"
             this.$refs.addressDisplay.innerText = "Addr: ..."
             this.$refs.balanceDisplay.innerText = "Bal: ..."
+            this.$refs.txlBalanceDisplay.innerText = "2.725K Bal: ..."
             this.$emit("loggedOut")
         },
         async displayWalletState(activeAccount) {
@@ -62,8 +69,9 @@ export default {
             this.$refs.addressDisplay.innerText = 'Addr: ' + reduced_address
             this.$refs.balanceDisplay.innerText = 'Bal: ' + balance_num + ' $XTZ'
             this.$refs.connectWalletButton.innerText = "DISCONNECT"
-            this.$emit("updateOwnedTxls", address)
+            this.$refs.txlBalanceDisplay.innerText = '2.725K Bal: ' + this.ownedTxls.length
             this.$emit("addressReady", address)
+            this.$emit("updateOwnedTxls", address)
         },
         async walletState() {
             const wallet = await getBeaconWallet();
@@ -156,7 +164,7 @@ export default {
     padding: 20px;
     border: 5px;
     font-size: xx-large;
-    width: 800px;
+    width: 60%;
 }
 .headerForWallet{
     display: flex;

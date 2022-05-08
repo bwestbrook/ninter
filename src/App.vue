@@ -2,9 +2,8 @@
   <div class="mainFlex">
     <div>
       <walletConnect 
-        :connectToBeacon="connectToBeacon" :walletConnected="walletConnected" 
-        @hideNft="hideNft" @addressReady="addressReady" @loggedOut="clearOwnedTxls"
-        @toggleConnectToBeacon="toggleConnectToBeacon" 
+        :connectToBeacon="connectToBeacon" :walletConnected="walletConnected" :ownedTxls="ownedTxls"
+        @addressReady="addressReady" @loggedOut="clearOwnedTxls" @toggleConnectToBeacon="toggleConnectToBeacon" 
       />
     </div>
     <displayTxl 
@@ -40,7 +39,6 @@ export default {
       objktUrl: "", 
       displayLink: "",
       attributes: [
-        {name: 'TXL Version', value: 1.0},
         {name: 'TXL ID', value: 1},
         {name: 'owner', value: ""},
         {name: 'Kala ID', value: 0}
@@ -49,7 +47,6 @@ export default {
   },
   beforeMount() {
     this.addressReady()
-
     this.getAllTxlKalamintTokens()
   },
   methods: {
@@ -127,7 +124,6 @@ export default {
       const displayLink = IPFS_HTTPS_LINK + thisTxl.ipfs_hash.split('//')[1]
       this.displayLink = displayLink
       this.attributes = [
-        {name: 'TXL Version', value: 1.0},
         {name: 'TXL ID', value: token_id},
         {name: 'owner', value: owner},
         {name: 'Kala ID', value: kalamint_token_id}

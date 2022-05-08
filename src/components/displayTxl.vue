@@ -1,29 +1,32 @@
 <template>
     <div class="mainFlex">
-
         <div class="attributeFlexContainer">
-            <div class="attributeDisplay"> Loaded TXL: {{loadedTxl}} of 272 </div>
-            <div @click="ownedTxlClick" class="attributeDisplay" v-for="index in ownedTxls" :key="index"> {{index.name}} </div>
-            <div class="genericVerticalFlex">
-                <input @enter="displayKalaTxl" placeholder="Check out a TXL" type="number" ref="searchTxl"/>
-                <button @click="displayKalaTxl">Check it out!</button>
-                <button @click="randomTxl">Random 2.725K</button>
-                <button @click="buyOnObjkt" :url="objktUrl">Buy on Objkt!</button>
-            </div>
-        </div>
-        <div class="attributeFlexContainer">
+            <div @click="prevTxl" class="bigArrow" ref="prevArrow"> &#8711; </div>
+            <div class="attributeDisplay"> Loaded 2.725K: {{loadedTxl}} of 272 </div>
+            <div class="attributeDisplay"> Rank TBC of 272 </div>
             <div class="attributeDisplay" v-for="key in attributes" :key="key.name">{{key.name}} : {{key.value}}</div>
+            <div class="attributeDisplay" @click="buyOnObjkt" >Buy/Offer on Objkt!</div>
+            <button @click="nextTxl" class="bigArrow" ref="nextArrow"> &#916; </button>
+        </div>
+        <div class="ownedTxlFlexContainer">
+            <div class="ownedTxlContainer"> My TXLs:</div>
+            <div @click="ownedTxlClick" class="ownedTxlContainer" v-for="index in ownedTxls" :key="index"> {{index.name}} </div>
         </div>
         <div class="genericFlex">
-            <div @click="prevTxl" class="bigArrow" ref="prevArrow"> &#8711; </div>
             <div class="displayBox">
                 <img class="mainNftDisplay" ref="displayPng" :src="displayLink">
             </div>
             <div class="attributeFlexContainer">
-                <p>Hello World</p>
+                <div class="genericVerticalFlex">
+                </div>
             </div>
 
-            <button @click="nextTxl" class="bigArrow" ref="nextArrow"> &#916; </button>
+        </div>
+         <div class="broswerFlexContainer">
+            <div class="navButtons" @click="displayKalaTxl">Enter 2.725K ID</div>
+            <input @enter="displayKalaTxl" placeholder="Check out a TXL" type="number" ref="searchTxl"/>
+            <button class="navButtons" @click="displayKalaTxl">Check it out!</button>
+            <button class="navButtons" @click="randomTxl">View a random 2.725K</button>
         </div>
         <div>{{description}}</div>
     </div>    
@@ -70,7 +73,7 @@ export default {
             console.log("hi close ")
         },
         displayKalaTxl (id = 102) {
-            let this_id = this.attributes[1].value
+            let this_id = this.attributes[0].value
             this_id = Number(this_id)
             if (this_id < 1 || this_id > 272) {
                 return
@@ -112,8 +115,9 @@ export default {
             }
         },
         buyOnObjkt () {
-            const token_id = this.attributes[3].value
+            const token_id = this.attributes[2].value
             const objkt_url = OBJKT_KALA_BASE + token_id
+            console.log(objkt_url)
             window.open(objkt_url, '_blank');
 
         }
@@ -164,16 +168,32 @@ export default {
     justify-content: center;
     align-self: center;
 }
+.broswerFlexContainer{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    background: rgb(143, 128, 128);
+}
 .attributeFlexContainer{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     background: rgb(143, 128, 128);
     }
-.chonky{
+.ownedTxlFlexContainer{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-around;
+    justify-content: space-around;
+    background: rgb(143, 128, 128);
+}
+.ownedTxlContainer{
     padding: 2px;
-    background: rgb(230, 77, 77);
-    height: 100px;
+    background: rgb(3, 2, 2);
+    color: aliceblue;
+    width: 50px;
+    border-radius: 3px;
 }
 .mainFlex {
     padding: 20px;
@@ -185,13 +205,13 @@ export default {
 }
 .attributeDisplay{
     padding: 2px;
-    height: 100px;
+    height: 75px;
     flex-basis: 100px;
     margin: 10px auto;
     border-radius: 10px;
     border: 5px;
-    color:rgb(199, 226, 175);
-    background: rgb(90, 45, 45);
+    color:aliceblue;
+    background: rgb(69, 59, 1);
     font: bold;
     font-size: 15px;
     display: flex;
@@ -204,9 +224,9 @@ export default {
     margin: 0px auto;
     border-radius: 10px;
     border: 5px;
-    height: 5%;
-    color:rgb(199, 226, 175);
-    background: rgb(60, 52, 57);
+    height: 75px;
+    color:aliceblue;
+    background: rgb(3, 2, 2);
     font: bold;
     font-size: 50px;
     justify-content: center;
@@ -221,4 +241,12 @@ export default {
     background: rgb(150, 31, 193);
     color:aliceblue;
 }
+.navButtons{
+    border-radius: 4px;
+    min-width: 200px;
+    margin: 2px; 
+    background: rgb(13, 53, 27);
+    color:aliceblue;
+}
+
 </style>
