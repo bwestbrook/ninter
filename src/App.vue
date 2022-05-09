@@ -138,6 +138,7 @@ export default {
       ]
       console.log(this.attributes)
       console.log(this.displayLink)
+      this.updateTxlLedger()
     },
     hideNft() {
       this.showModal = false
