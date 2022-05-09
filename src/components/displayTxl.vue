@@ -33,7 +33,7 @@
         </div>
         <div class="broswerFlexContainer">
             <div class="informationContainer" @click="displayKalaTxl">Enter 2.725K ID</div>
-            <input @onkeydown="displayKalaTxl" placeholder="Check out a TXL" type="number" ref="searchTxl"/>
+            <input v-on:keydown.enter="displayKalaTxl" placeholder="Check out a TXL" type="number" ref="searchTxl"/>
             <button class="navButtons" @click="displayKalaTxl">Check it out!</button>
             <button class="navButtons" @click="randomTxl">View a random 2.725K</button>
             <div class="informationContainer"> {{soldTxls.length}} / 272 Sold! </div>
@@ -369,12 +369,12 @@ export default {
 .descriptionFlexContainer{
     display: flex;
     align-content: center;
-    justify-content: start;
+    justify-content: flex-start;
     background: rgb(143, 128, 128);
 }
 .descriptionContainer{
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-content: center;
     height: 30px;
     margin: 1px;
@@ -382,7 +382,7 @@ export default {
 }
 .description{
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-content: center;
     color:aliceblue;
 }
