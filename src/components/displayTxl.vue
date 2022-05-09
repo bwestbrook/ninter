@@ -75,11 +75,6 @@ export default {
         },
         displayKalaTxl (id = 102) {
             let this_id = this.collectionAttributes[0].value
-            console.log(this.collectionAttributes)
-            console.log(this.collectionAttributes)
-            console.log(this.collectionAttributes)
-
-
             this_id = Number(this_id)
             if (this_id < 1 || this_id > 272) {
                 return
@@ -91,8 +86,7 @@ export default {
             }
         },
         prevTxl () {
-            console.log("changing", this.collectionAttributes[1])
-            let this_id = this.collectionAttributes[1].value
+            let this_id = this.collectionAttributes[0].value
             let next_id = this_id
             this_id = Number(this_id)
             if (this_id === 1 ) {
@@ -107,7 +101,6 @@ export default {
             this.$emit("loadTxl", random_txl_id)
         },
         nextTxl () {
-            console.log("changing", this.collectionAttributes)
             let this_id = this.collectionAttributes[0].value
             let next_id = this_id
             this_id = Number(this_id)
@@ -115,17 +108,13 @@ export default {
                 return
             } else {
                 next_id = this_id + 1
-                console.log("this nex")
-                console.log(next_id)
                 this.$emit("loadTxl", next_id)
             }
         },
         buyOnObjkt () {
             const kala_token_id = this.collectionAttributes[2].value
             const objkt_url = OBJKT_KALA_BASE + kala_token_id
-            console.log(objkt_url)
             window.open(objkt_url, '_blank');
-
         }
     }
 }
@@ -214,8 +203,7 @@ export default {
     height: 75px;
     flex-basis: 100px;
     margin: 10px auto;
-    border-radius: 10px;
-    border: 5px;
+    border-radius: 5px;
     color:aliceblue;
     background: rgb(3, 2, 2);
     font: bold;
