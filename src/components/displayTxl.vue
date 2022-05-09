@@ -33,7 +33,7 @@
         </div>
         <div class="broswerFlexContainer">
             <div class="informationContainer" @click="displayKalaTxl">Enter 2.725K ID</div>
-            <input @enter="displayKalaTxl" placeholder="Check out a TXL" type="number" ref="searchTxl"/>
+            <input @onkeydown="displayKalaTxl" placeholder="Check out a TXL" type="number" ref="searchTxl"/>
             <button class="navButtons" @click="displayKalaTxl">Check it out!</button>
             <button class="navButtons" @click="randomTxl">View a random 2.725K</button>
             <div class="informationContainer"> {{soldTxls.length}} / 272 Sold! </div>
@@ -214,7 +214,7 @@ export default {
 
 }
 .attributeFlexButton{
- padding: 2px;
+    padding: 2px;
     height: 75px;
     flex-basis: 100px;
     margin: 10px auto;
@@ -250,7 +250,8 @@ export default {
     color: aliceblue;
     border-radius: 5px;
     border-style: solid;
-    border: 5px;
+    border-color: aliceblue;
+    margin: 2px;
     width: 75px;
     border-radius: 6px;
 }
@@ -258,8 +259,6 @@ export default {
     padding: 2px;
     background: rgb(3, 2, 2);
     color: aliceblue;
-    border-style: solid;
-    border: 4px;
     width: 75px;
     height: 20px;
     border-radius: 3px;
