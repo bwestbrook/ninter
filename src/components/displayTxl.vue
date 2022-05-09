@@ -1,16 +1,21 @@
 <template>
     <div class="mainFlex">
-        <div class="attributeFlexContainer">
-            <div @click="prevTxl" class="bigArrow" ref="prevArrow"> &#x2190; </div>
-            <div class="collectionAttributeDisplay"> Loaded 2.725K: {{loadedTxl}} of 272 </div>
-            <div class="collectionAttributeDisplay"> Rank TBC of 272 </div>
-            <div class="collectionAttributeDisplay" v-for="key in collectionAttributes" :key="key.name">{{key.name}} : {{key.value}}</div>
-            <div class="collectionAttributeDisplay" @click="buyOnObjkt" >Buy/Offer on Objkt!</div>
-            <button @click="nextTxl" class="bigArrow" ref="nextArrow"> &#x2192; </button>
+        <div class="descriptionFlexContainer">
+            <div class="description"> {{description}}</div>
+        </div>
+        <div class="descriptionFlexContainer">
+            <div class="description"> {{howTo}}</div>
+        </div>
+
+        <div v-if="false" class="tabFlexContainer">
+            <div class="tabButtons"> LearnMore </div>
+            <div class="tabButtons"> Browsing View </div>
+            <div class="tabButtons"> Gallery View </div>
+            <div class="tabButtons"> Leader Board </div>
         </div>
         <div class="ownedTxlFlexContainer">
             <div class="ownedTxlContainer"> My TXLs:</div>
-            <div @click="ownedTxlClick" class="ownedTxlContainer" v-for="index in ownedTxls" :key="index"> {{index.name}} </div>
+            <div @click="ownedTxlClick" class="ownedTxlButton" v-for="index in ownedTxls" :key="index"> {{index.name}} </div>
         </div>
         <div class="genericFlex">
             <div class="displayBox">
@@ -23,13 +28,27 @@
                 </div>
             </div>
         </div>
-         <div class="broswerFlexContainer">
+        <div class="attributeFlexContainer">
+            <div @click="prevTxl" class="bigArrow" ref="prevArrow"> &#x2190; </div>
+            <div class="collectionAttributeDisplay"> Rank TBC of 272 </div>
+            <div class="collectionAttributeDisplay" v-for="key in collectionAttributes" :key="key.name">{{key.name}} : {{key.value}}</div>
+            <div class="attributeFlexButton" @click="buyOnObjkt" >Buy/Offer on Objkt!</div>
+            <button @click="nextTxl" class="bigArrow" ref="nextArrow"> &#x2192; </button>
+        </div>
+        <div class="broswerFlexContainer">
             <div class="navButtons" @click="displayKalaTxl">Enter 2.725K ID</div>
             <input @enter="displayKalaTxl" placeholder="Check out a TXL" type="number" ref="searchTxl"/>
             <button class="navButtons" @click="displayKalaTxl">Check it out!</button>
             <button class="navButtons" @click="randomTxl">View a random 2.725K</button>
+            <div class="navButtons"> Loaded 2.725K: {{loadedTxl}} of 272 </div>
+
         </div>
-        <div>{{description}}</div>
+        <div class="descriptionFlexContainer">
+            <div class="description"> {{status}}</div>
+        </div>
+        <div class="descriptionFlexContainer">
+            <div>{{footer}}</div>
+        </div>
     </div>    
 </template>
 
@@ -37,14 +56,17 @@
 
 
 import { getRandomIntInclusive } from '../services/utilities.js'
-import { PROJECT_DESCRIPTION, OBJKT_KALA_BASE } from '../constants.js'
+import { PROJECT_DESCRIPTION, FOOTER, PROJECT_STATUS, HOW_TO, OBJKT_KALA_BASE } from '../constants.js'
 import $ from 'jquery'
 
 
 export default {
     data () {
         return {
-            description: PROJECT_DESCRIPTION
+            description: PROJECT_DESCRIPTION,
+            footer: FOOTER,
+            status: PROJECT_STATUS,
+            howTo: HOW_TO
         }
     },
     beforeMount(){
@@ -176,13 +198,38 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     background: rgb(143, 128, 128);
-    }
+}
+.attributeFlexButton{
+ padding: 2px;
+    height: 75px;
+    flex-basis: 100px;
+    margin: 10px auto;
+    border-radius: 5px;
+    border-style: solid;
+    color:aliceblue;
+    background: rgb(59, 37, 37);
+    font: bold;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
 .ownedTxlFlexContainer{
     display: flex;
     flex-wrap: wrap;
     align-content: space-around;
     justify-content: space-around;
     background: rgb(143, 128, 128);
+}
+.ownedTxlButton{
+    padding: 2px;
+    background: rgb(87, 58, 58);
+    color: aliceblue;
+    border-radius: 5px;
+    border-style: solid;
+    border: 1px;
+    width: 75px;
+    border-radius: 6px;
 }
 .ownedTxlContainer{
     padding: 2px;
@@ -245,10 +292,11 @@ export default {
     flex-basis: 100px;
     margin: 0px auto;
     border-radius: 10px;
-    border: 5px;
+    border: 1px;
+    border-style: solid;
     height: 75px;
     color:aliceblue;
-    background: rgb(3, 2, 2);
+    background: rgb(59, 37, 37);
     font: bold;
     font-size: 50px;
     display: flex;
@@ -264,11 +312,43 @@ export default {
     background: rgb(150, 31, 193);
     color:aliceblue;
 }
+.tabFlexContainer{
+    display: flex;
+    background: rgb(143, 128, 128);
+    align-content: space-between;
+    justify-content: space-between;
+}
+.tabButtons{
+    border-radius: 4px;
+    min-width: 200px;
+    margin: 2px; 
+    display: flex;
+    background: rgb(46, 17, 17);
+    color:aliceblue;
+}
 .navButtons{
     border-radius: 4px;
     min-width: 200px;
     margin: 2px; 
     background: rgb(22, 32, 25);
+    color:aliceblue;
+}.descriptionFlexContainer{
+    display: flex;
+    align-content: center;
+    justify-content: start;
+}
+.descriptionContainer{
+    display: flex;
+    justify-content: start;
+    align-content: center;
+    height: 30px;
+    margin: 1px;
+    color:aliceblue;
+}
+.description{
+    display: flex;
+    justify-content: start;
+    align-content: center;
     color:aliceblue;
 }
 
