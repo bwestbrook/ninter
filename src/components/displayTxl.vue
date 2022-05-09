@@ -3,10 +3,6 @@
         <div class="descriptionFlexContainer">
             <div class="description"> {{description}}</div>
         </div>
-        <div class="descriptionFlexContainer">
-            <div class="description"> {{howTo}}</div>
-        </div>
-
         <div v-if="false" class="tabFlexContainer">
             <div class="tabButtons"> LearnMore </div>
             <div class="tabButtons"> Browsing View </div>
@@ -16,6 +12,9 @@
         <div class="ownedTxlFlexContainer">
             <div class="ownedTxlContainer"> My TXLs:</div>
             <div @click="ownedTxlClick" class="ownedTxlButton" v-for="index in ownedTxls" :key="index"> {{index.name}} </div>
+        </div>
+        <div class="descriptionFlexContainer">
+            <div class="description"> {{howTo}}</div>
         </div>
         <div class="genericFlex">
             <div class="displayBox">
