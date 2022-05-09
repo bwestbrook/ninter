@@ -16,8 +16,8 @@
             <div class="displayBox">
                 <img class="mainNftDisplay" ref="displayPng" :src="displayLink">
             </div>
-            <div class="attributeFlexContainer">x``
-                <div class="attributeDisplay" v-for="(val, index) in tokenAttributes" :key="val">
+            <div class="attributeFlexContainer">
+                <div class="attributeDisplay"  v-for="(val, index) in tokenAttributes" :key="val"  >
                     {{index}} : {{val}}
                 </div>
             </div>
