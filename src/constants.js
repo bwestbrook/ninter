@@ -15,14 +15,14 @@ export const OBJKT_KALA_BASE = "https://objkt.com/asset/kalamint/"
 export const PROJECT_DESCRIPTION = "2.725K is collection of 272 curated 3D confocal microscopy" +
 "renderings of micro-machined silicon structures"
 
-export const PROJECT_STATUS = "Status May 9, 2022: I'm currently builind this rarity/browsning site" +
-"for this collection so bear with me as put this all together.  Expect lots of UI updates in the coming" +
+export const PROJECT_STATUS = "Status May 9, 2022: I'm currently builind this rarity site " +
+"so bear with me as put this all together.  Expect lots of UI updates in the coming" +
 "days and weeks."
 
 export const HOW_TO = "How To: Just connect your wallet and use the navigation arrows, search box, or your 2.725K buttons to check the collection out "
 
-export const FOOTER = "This project was reated with love and care for the the Tezos " +
-"Communivty by Benjamin Westbrook 2022."
+export const FOOTER = "This project was created with love and care for the the Tezos " +
+"Community by Benjamin Westbrook 2022. All Rights Reserved."
 
 export const NULL_STR = '""'
 
