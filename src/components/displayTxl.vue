@@ -264,7 +264,7 @@ export default {
     padding: 2px;
     height: 25px;
     width: 125px;
-    font-size: 20px;
+    font-size: 16px;
     font: bold;
     margin: 10px auto;
     display: flex;

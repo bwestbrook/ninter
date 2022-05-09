@@ -6,7 +6,7 @@
             <div class="walletFlexItem" ref="txlBalanceDisplay"> 2.725K Bal: {{ownedTxls.length}} </div>
         </div>
         <div class="genericFlex">
-            <div class="walletFlexItem" @click="walletState" ref="connectWalletButton" >LOAD</div>
+            <div class="walletConnectButton" @click="walletState" ref="connectWalletButton" >LOAD</div>
             <div class="walletFlexItem" ref="addressDisplay"></div>
         </div>
 
@@ -131,6 +131,18 @@ export default {
     border-radius: 4px;
     background: grey;
     flex-direction: column;
+}
+.walletConnectButton{
+    color: #2f77b5;
+    border-style: solid;
+    border: 2px;
+    background-color: rgb(28, 73, 73); 
+    margin: 2px; 
+    text-align: center; 
+    border-radius: 4px;
+    max-width: 300px;
+    padding: 5px;
+    font-size: 16px; 
 }
 .walletFlexItem{
     color: #2f77b5;
