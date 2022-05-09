@@ -117,6 +117,7 @@ export default {
     flex-shrink: 50;
     padding: 2px;
     border: 5px;
+    width: 95%;
     display: flex;
     border-radius: 4px;
     background: grey;

@@ -107,6 +107,7 @@ export default {
       }
     },
     async loadTxl(token_id) {
+      this.tokenAttributes = []
       if (token_id < 0  || token_id > 272) {
         alert("Please insert token ID between 1 and 272")
         return
