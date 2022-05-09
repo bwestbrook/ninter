@@ -12,8 +12,9 @@ export const IPFS_HTTPS_LINK = "https://ipfs.io/ipfs/"
 
 export const OBJKT_KALA_BASE = "https://objkt.com/asset/kalamint/"
 
-export const PROJECT_DESCRIPTION = "2.725K is collection of 272 curated 3D confocal microscopy" +
-"renderings of micro-machined silicon structures"
+export const PROJECT_DESCRIPTION = "2.725K is collection of 272 curated 3D confocal microscopy " +
+"renderings of micro-machined silicon structures.  These scans all come from 2.5 mm x 2.5 mm x 0.25 mm " +
+" sections of of silicon wafer"
 
 export const PROJECT_STATUS = "Status May 9, 2022: I'm currently building this rarity site " +
 "so bear with me as put this all together.  Expect lots of UI updates in the coming " +

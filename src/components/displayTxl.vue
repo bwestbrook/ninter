@@ -1,21 +1,20 @@
 <template>
     <div class="mainFlex">
-        <div class="descriptionFlexContainer">
-            <div class="description"> {{description}}</div>
-        </div>
+
         <div v-if="false" class="tabFlexContainer">
             <div class="tabButtons"> LearnMore </div>
             <div class="tabButtons"> Browsing View </div>
             <div class="tabButtons"> Gallery View </div>
             <div class="tabButtons"> Leader Board </div>
         </div>
+        <div class="howToFlexContainer">    
+            <div class="description"> {{howTo}}</div>
+        </div>
         <div class="ownedTxlFlexContainer">
             <div class="ownedTxlContainer"> My TXLs:</div>
             <div @click="ownedTxlClick" class="ownedTxlButton" v-for="index in ownedTxls" :key="index"> {{index.name}} </div>
         </div>
-        <div class="descriptionFlexContainer">
-            <div class="description"> {{howTo}}</div>
-        </div>
+
         <div class="genericFlex">
             <div class="displayBox">
                 <img class="mainNftDisplay" ref="displayPng" :src="displayLink">
@@ -41,6 +40,14 @@
             <button class="navButtons" @click="randomTxl">View a random 2.725K</button>
             <div class="navButtons"> Loaded 2.725K: {{loadedTxl}} of 272 </div>
 
+        </div>
+            <div class="ownedTxlFlexContainer">
+                Learn more about these awesome NFTs!
+            </div>
+        <div class="descriptionFlexContainer">
+            <div class="description"> {{description}}</div>
+            <img src="../assets/Promo_Small.gif" style="width:300px;height:300px;">
+            <img src="../assets/Physical_Chips.jpg" style="width:500px;height:300px;">
         </div>
         <div class="descriptionFlexContainer">
             <div class="description"> {{status}}</div>
@@ -331,10 +338,17 @@ export default {
     margin: 2px; 
     background: rgb(22, 32, 25);
     color:aliceblue;
-}.descriptionFlexContainer{
+}
+.howToFlexContainer{
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+.descriptionFlexContainer{
     display: flex;
     align-content: center;
     justify-content: start;
+    background: rgb(143, 128, 128);
 }
 .descriptionContainer{
     display: flex;
