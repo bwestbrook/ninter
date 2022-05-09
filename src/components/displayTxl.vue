@@ -2,10 +2,10 @@
     <div class="mainFlex">
         <div class="attributeFlexContainer">
             <div @click="prevTxl" class="bigArrow" ref="prevArrow"> &#x2190; </div>
-            <div class="attributeDisplay"> Loaded 2.725K: {{loadedTxl}} of 272 </div>
-            <div class="attributeDisplay"> Rank TBC of 272 </div>
-            <div class="attributeDisplay" v-for="key in collectionAttributes" :key="key.name">{{key.name}} : {{key.value}}</div>
-            <div class="attributeDisplay" @click="buyOnObjkt" >Buy/Offer on Objkt!</div>
+            <div class="collectionAttributeDisplay"> Loaded 2.725K: {{loadedTxl}} of 272 </div>
+            <div class="collectionAttributeDisplay"> Rank TBC of 272 </div>
+            <div class="collectionAttributeDisplay" v-for="key in collectionAttributes" :key="key.name">{{key.name}} : {{key.value}}</div>
+            <div class="collectionAttributeDisplay" @click="buyOnObjkt" >Buy/Offer on Objkt!</div>
             <button @click="nextTxl" class="bigArrow" ref="nextArrow"> &#x2192; </button>
         </div>
         <div class="ownedTxlFlexContainer">
@@ -17,8 +17,9 @@
                 <img class="mainNftDisplay" ref="displayPng" :src="displayLink">
             </div>
             <div class="attributeFlexContainer">
-                <div class="attributeDisplay"  v-for="(val, index) in tokenAttributes" :key="val"  >
-                    {{index}} : {{val}}
+                <div  v-for="(val, index) in tokenAttributes" :key="val"  >
+                    <div class="attributeCategory" > {{index}} </div>
+                    <div class="attributeValue"> {{val}} </div>
                 </div>
             </div>
         </div>
@@ -198,7 +199,7 @@ export default {
     background: grey;
     flex-direction: column;
 }
-.attributeDisplay{
+.collectionAttributeDisplay{
     padding: 2px;
     height: 75px;
     flex-basis: 100px;
@@ -206,6 +207,32 @@ export default {
     border-radius: 5px;
     color:aliceblue;
     background: rgb(3, 2, 2);
+    font: bold;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+.attributeValue{
+    padding: 2px;
+    height: 25px;
+    font-size: 20px;
+    font: bold;
+    margin: 10px auto;
+    display: flex;
+    border-radius: 5px;
+    justify-content: center;
+    color:rgb(3, 97, 181);
+}
+.attributeCategory{
+    padding: 2px;
+    width: 100px;
+    height: 50px;
+    flex-basis: 100px;
+    margin: 10px auto;
+    border-radius: 5px;
+    color:aliceblue;
+    background: rgb(25, 20, 20);
     font: bold;
     font-size: 15px;
     display: flex;
