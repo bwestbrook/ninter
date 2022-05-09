@@ -10,7 +10,7 @@ export const getJsonObjectFromString = async(input_string) => {
   export const reduceAddress = async(address) => {
     return address.substring(0, 4) + '..' + address.substring(address.length - 4)
   }
-  
+
   
   export const getRandomIntInclusive = (min, max) => {
     min = Math.ceil(min);

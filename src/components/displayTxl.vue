@@ -1,6 +1,5 @@
 <template>
     <div class="mainFlex">
-
         <div v-if="false" class="tabFlexContainer">
             <div class="tabButtons"> LearnMore </div>
             <div class="tabButtons"> Browsing View </div>
@@ -11,10 +10,9 @@
             <div class="description"> {{howTo}}</div>
         </div>
         <div class="ownedTxlFlexContainer">
-            <div class="ownedTxlContainer"> My TXLs:</div>
-            <div @click="ownedTxlClick" class="ownedTxlButton" v-for="index in ownedTxls" :key="index"> {{index.name}} </div>
+            <div class="ownedTxlContainer"> Owned </div>
+            <button @click="ownedTxlClick" class="ownedTxlButton" v-for="index in ownedTxls" :key="index"> {{index.name}} </button>
         </div>
-
         <div class="genericFlex">
             <div class="displayBox">
                 <img class="mainNftDisplay" ref="displayPng" :src="displayLink">
@@ -34,16 +32,21 @@
             <button @click="nextTxl" class="bigArrow" ref="nextArrow"> &#x2192; </button>
         </div>
         <div class="broswerFlexContainer">
-            <div class="navButtons" @click="displayKalaTxl">Enter 2.725K ID</div>
+            <div class="informationContainer" @click="displayKalaTxl">Enter 2.725K ID</div>
             <input @enter="displayKalaTxl" placeholder="Check out a TXL" type="number" ref="searchTxl"/>
             <button class="navButtons" @click="displayKalaTxl">Check it out!</button>
             <button class="navButtons" @click="randomTxl">View a random 2.725K</button>
-            <div class="navButtons"> Loaded 2.725K: {{loadedTxl}} of 272 </div>
+            <div class="informationContainer"> {{soldTxls.length}} / 272 Sold! </div>
+            <div class="informationContainer"> Loaded 2.725K: {{loadedTxl}} of 272 </div>
 
         </div>
-            <div class="ownedTxlFlexContainer">
-                Learn more about these awesome NFTs!
-            </div>
+        <div class="unSoldTxlFlexContainer">
+            <div class="ownedTxlContainer"> Primary: </div>
+            <button @click="ownedTxlClick" class="ownedTxlButton" v-for="index in unSoldTxls" :key="index"> {{index.name}} </button>
+        </div>
+        <div class="ownedTxlFlexContainer">
+            Learn more about these awesome NFTs!
+        </div>
         <div class="descriptionFlexContainer">
             <div class="description"> {{description}}</div>
             <img src="../assets/Promo_Small.gif" style="width:300px;height:300px;">
@@ -89,6 +92,8 @@ export default {
         "objktUrl",
         "loadedTxl",
         "ownedTxls",
+        "unSoldTxls",
+        "soldTxls",
         "clickedOwnedTxl"
         ],
     methods: {
@@ -155,7 +160,7 @@ export default {
     margin: 1px auto;
     border-radius: 10px;
     display: flex;
-    background: rgb(143, 128, 128);
+    background: rgb(115, 96, 96);
     justify-content: end;
 }
 .genericVerticalFlex{
@@ -198,12 +203,15 @@ export default {
     align-items: center;
     justify-content: space-between;
     background: rgb(143, 128, 128);
+
 }
 .attributeFlexContainer{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     background: rgb(143, 128, 128);
+
+
 }
 .attributeFlexButton{
  padding: 2px;
@@ -223,9 +231,18 @@ export default {
 .ownedTxlFlexContainer{
     display: flex;
     flex-wrap: wrap;
-    align-content: space-around;
-    justify-content: space-around;
+    margin: 1px;
+    padding: 3px;
+    align-content: space-between;
+    justify-content: space-between;
     background: rgb(143, 128, 128);
+}
+.unSoldTxlFlexContainer{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: space-between;
+    justify-content: space-between;
+    background: rgb(115, 96, 96);   
 }
 .ownedTxlButton{
     padding: 2px;
@@ -233,7 +250,7 @@ export default {
     color: aliceblue;
     border-radius: 5px;
     border-style: solid;
-    border: 1px;
+    border: 5px;
     width: 75px;
     border-radius: 6px;
 }
@@ -241,7 +258,10 @@ export default {
     padding: 2px;
     background: rgb(3, 2, 2);
     color: aliceblue;
-    width: 50px;
+    border-style: solid;
+    border: 4px;
+    width: 75px;
+    height: 20px;
     border-radius: 3px;
 }
 .mainFlex {
@@ -275,6 +295,9 @@ export default {
     margin: 10px auto;
     display: flex;
     border-radius: 5px;
+        border-style: solid;
+    border: 1px;
+    border-color: aliceblue;
     justify-content: center;
     color:rgb(4, 25, 44);
 }

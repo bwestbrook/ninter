@@ -8,7 +8,7 @@
     </div>
     <displayTxl 
         :displayLink="displayLink" :collectionAttributes="collectionAttributes" 
-        :tokenAttributes="tokenAttributes" :objktUrl="objktUrl" 
+        :tokenAttributes="tokenAttributes" :objktUrl="objktUrl" :unSoldTxls="unSoldTxls" :soldTxls="soldTxls"
         :loadedTxl="loadedTxl" :ownedTxls="ownedTxls" @loadTxl="loadTxl" @canBuyOnObjkt="canBuyOnObjkt"
     />
   </div>
@@ -36,6 +36,10 @@ export default {
       ],
       ownedTxls: [
         ],
+      unSoldTxls: [
+      ],
+      soldTxls: [
+      ],
       walletConnected: false,
       objktUrl: "", 
       displayLink: "",
@@ -72,6 +76,8 @@ export default {
     async updateTxlLedger () {
       let txl_id = 1
       this.ownedTxls = []
+      this.unSoldTxls = []
+      this.soldTxls = []
       for (txl_id; txl_id <= 272; ++txl_id) {
         const zero_filled_txl_id = zeroFillId(txl_id)
         const thisTxl = this.kalaTxls[txl_id - 1]
@@ -80,6 +86,14 @@ export default {
           if (thisTxlOwner === this.setAddress) {
             const index = this.ownedTxls.length
             this.ownedTxls[index] = {name: zero_filled_txl_id, value: txl_id}
+            const index2 = this.soldTxls.length
+            this.soldTxls[index2] = {name: zero_filled_txl_id, value: txl_id}
+          } else if (thisTxlOwner === OBJKT_CONTRACT) {
+            const index = this.unSoldTxls.length
+            this.unSoldTxls[index] = {name: zero_filled_txl_id, value: txl_id}
+          } else {
+            const index3 = this.soldTxls.length
+            this.soldTxls[index3] = {name: zero_filled_txl_id, value: txl_id}
           }
         }
       }
