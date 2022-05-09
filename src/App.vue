@@ -7,7 +7,8 @@
       />
     </div>
     <displayTxl 
-        :displayLink="displayLink" :attributes="attributes" :objktUrl="objktUrl" 
+        :displayLink="displayLink" :collectionAttributes="collectionAttributes" 
+        :tokenAttributes="tokenAttributes" :objktUrl="objktUrl" 
         :loadedTxl="loadedTxl" :ownedTxls="ownedTxls" @loadTxl="loadTxl" @canBuyOnObjkt="canBuyOnObjkt"
     />
   </div>
@@ -19,7 +20,7 @@ import walletConnect from "./components/walletConnect.vue"
 import displayTxl from "./components/displayTxl.vue"
 import { getAllKalamintTokens } from './services/tezos-services.js'
 import { reduceAddress, zeroFillId } from './services/utilities.js'
-import { ID_LOOKUP, IPFS_HTTPS_LINK, OBJKT_CONTRACT } from './constants.js'
+import { ID_LOOKUP, IPFS_HTTPS_LINK, OBJKT_CONTRACT, FULL_TXL_STATS } from './constants.js'
 
 
 export default {
@@ -38,11 +39,12 @@ export default {
       walletConnected: false,
       objktUrl: "", 
       displayLink: "",
-      attributes: [
+      collectionAttributes: [
         {name: 'TXL ID', value: 1},
         {name: 'owner', value: ""},
         {name: 'Kala ID', value: 0}
-      ]
+      ],
+      tokenAttributes: {}
     }
   },
   beforeMount() {
@@ -100,7 +102,6 @@ export default {
         catch (e) {
           console.log(e)
           this.kalaTxls[txl_id - 1] = undefined
-          //this.updateTxlLedger(txl_id, undefined)
         }
         this.loadedTxl = txl_id
       }
@@ -110,10 +111,16 @@ export default {
         alert("Please insert token ID between 1 and 272")
         return
       }
-      const zero_filled_token_id = ('0000'+token_id).slice(-3);
+      const zero_filled_token_id = zeroFillId(token_id)
       const kalamint_token_id = ID_LOOKUP[zero_filled_token_id]
       const kalamint_tokens = await getAllKalamintTokens()
 
+      token_id = Number(token_id)
+
+      console.log(token_id)
+      console.log(token_id - 1)
+      this.tokenAttributes = FULL_TXL_STATS[token_id]
+      console.log(this.tokenAttributes)
       const thisTxl = await kalamint_tokens.get(kalamint_token_id)
       let owner = thisTxl.owner
       if (owner === OBJKT_CONTRACT) {
@@ -123,7 +130,7 @@ export default {
       }
       const displayLink = IPFS_HTTPS_LINK + thisTxl.ipfs_hash.split('//')[1]
       this.displayLink = displayLink
-      this.attributes = [
+      this.collectionAttributes = [
         {name: 'TXL ID', value: token_id},
         {name: 'owner', value: owner},
         {name: 'Kala ID', value: kalamint_token_id}

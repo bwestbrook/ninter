@@ -1,12 +1,12 @@
 <template>
     <div class="mainFlex">
         <div class="attributeFlexContainer">
-            <div @click="prevTxl" class="bigArrow" ref="prevArrow"> &#8711; </div>
+            <div @click="prevTxl" class="bigArrow" ref="prevArrow"> &#x2190; </div>
             <div class="attributeDisplay"> Loaded 2.725K: {{loadedTxl}} of 272 </div>
             <div class="attributeDisplay"> Rank TBC of 272 </div>
-            <div class="attributeDisplay" v-for="key in attributes" :key="key.name">{{key.name}} : {{key.value}}</div>
+            <div class="attributeDisplay" v-for="key in collectionAttributes" :key="key.name">{{key.name}} : {{key.value}}</div>
             <div class="attributeDisplay" @click="buyOnObjkt" >Buy/Offer on Objkt!</div>
-            <button @click="nextTxl" class="bigArrow" ref="nextArrow"> &#916; </button>
+            <button @click="nextTxl" class="bigArrow" ref="nextArrow"> &#x2192; </button>
         </div>
         <div class="ownedTxlFlexContainer">
             <div class="ownedTxlContainer"> My TXLs:</div>
@@ -16,11 +16,11 @@
             <div class="displayBox">
                 <img class="mainNftDisplay" ref="displayPng" :src="displayLink">
             </div>
-            <div class="attributeFlexContainer">
-                <div class="genericVerticalFlex">
+            <div class="attributeFlexContainer">x``
+                <div class="attributeDisplay" v-for="(val, index) in tokenAttributes" :key="val">
+                    {{index}} : {{val}}
                 </div>
             </div>
-
         </div>
          <div class="broswerFlexContainer">
             <div class="navButtons" @click="displayKalaTxl">Enter 2.725K ID</div>
@@ -54,7 +54,8 @@ export default {
         "canBuyOnObjkt"
         ],
     props: [
-        "attributes",
+        "collectionAttributes",
+        "tokenAttributes",
         "displayLink",
         "objktUrl",
         "loadedTxl",
@@ -73,19 +74,25 @@ export default {
             console.log("hi close ")
         },
         displayKalaTxl (id = 102) {
-            let this_id = this.attributes[0].value
+            let this_id = this.collectionAttributes[0].value
+            console.log(this.collectionAttributes)
+            console.log(this.collectionAttributes)
+            console.log(this.collectionAttributes)
+
+
             this_id = Number(this_id)
             if (this_id < 1 || this_id > 272) {
                 return
             } 
             if (this.$refs.searchTxl.value) {
                 id = this.$refs.searchTxl.value
+                console.log('emitting', id)
                 this.$emit("loadTxl", id)
             }
         },
         prevTxl () {
-            console.log("changing", this.attributes[1])
-            let this_id = this.attributes[1].value
+            console.log("changing", this.collectionAttributes[1])
+            let this_id = this.collectionAttributes[1].value
             let next_id = this_id
             this_id = Number(this_id)
             if (this_id === 1 ) {
@@ -96,13 +103,12 @@ export default {
             }
         },
         randomTxl () {
-            console.log("")
             const random_txl_id = getRandomIntInclusive(1, 272)
             this.$emit("loadTxl", random_txl_id)
         },
         nextTxl () {
-            console.log("changing", this.attributes[1])
-            let this_id = this.attributes[1].value
+            console.log("changing", this.collectionAttributes)
+            let this_id = this.collectionAttributes[0].value
             let next_id = this_id
             this_id = Number(this_id)
             if (this_id === 272 ) {
@@ -115,8 +121,8 @@ export default {
             }
         },
         buyOnObjkt () {
-            const token_id = this.attributes[2].value
-            const objkt_url = OBJKT_KALA_BASE + token_id
+            const kala_token_id = this.collectionAttributes[2].value
+            const objkt_url = OBJKT_KALA_BASE + kala_token_id
             console.log(objkt_url)
             window.open(objkt_url, '_blank');
 
@@ -211,7 +217,7 @@ export default {
     border-radius: 10px;
     border: 5px;
     color:aliceblue;
-    background: rgb(69, 59, 1);
+    background: rgb(3, 2, 2);
     font: bold;
     font-size: 15px;
     display: flex;
@@ -229,6 +235,7 @@ export default {
     background: rgb(3, 2, 2);
     font: bold;
     font-size: 50px;
+    display: flex;
     justify-content: center;
     align-items: center; 
 }

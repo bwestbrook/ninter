@@ -111,13 +111,11 @@ export default {
 .backdrop {
   top: 0;
   background: rgb(0.1, 0.1, 0.1);
-  width: 100%;
   height: 100%;
 }
 .navigationBarFlex {
     flex-shrink: 50;
     padding: 2px;
-    width: 100%;
     border: 5px;
     display: flex;
     border-radius: 4px;
