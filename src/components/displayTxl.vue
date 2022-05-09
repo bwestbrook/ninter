@@ -216,13 +216,14 @@ export default {
 .attributeValue{
     padding: 2px;
     height: 25px;
+    width: 125px;
     font-size: 20px;
     font: bold;
     margin: 10px auto;
     display: flex;
     border-radius: 5px;
     justify-content: center;
-    color:rgb(3, 97, 181);
+    color:rgb(4, 25, 44);
 }
 .attributeCategory{
     padding: 2px;
@@ -267,7 +268,7 @@ export default {
     border-radius: 4px;
     min-width: 200px;
     margin: 2px; 
-    background: rgb(13, 53, 27);
+    background: rgb(22, 32, 25);
     color:aliceblue;
 }
 
