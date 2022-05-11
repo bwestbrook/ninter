@@ -43,8 +43,8 @@
             <input v-on:keydown.enter="displayKalaTxl" placeholder="Search By ID" type="number" ref="searchTxl"/>
             <button class="navButtons" @click="randomTxl">View a random 2.725K</button>
         </div>
-        <div class="howToFlexContainer">
-            <div> THE 2.725K LISTED BELOW ARE ON PRIMARY </div>
+        <div class="primaryFlexContainer">
+            <div> All of the 2.725Ks below are on primary! </div>
         </div>
         <div class="unSoldTxlFlexContainer">
             <div class="ownedTxlContainer"> ID (RANK)  </div>
@@ -391,6 +391,15 @@ export default {
     margin: 2px; 
     background: rgb(22, 32, 25);
     color:aliceblue;
+}
+.primaryFlexContainer{
+    display: flex;
+    font-size: 30px;
+    color: rgb(8, 19, 29);
+    font-stretch: expanded;
+    font-style: bold;
+    align-content: center;
+    justify-content: center;
 }
 .howToFlexContainer{
     display: flex;
