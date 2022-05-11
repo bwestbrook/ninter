@@ -17,7 +17,7 @@
         </div>
         <div class="ownedTxlFlexContainer">
             <div class="ownedTxlContainer"> ID (Rank) </div>
-            <button @click="ownedTxlClick" class="ownedTxlButton" v-for="index in ownedTxls" :key="index"> {{index.name}} ({{index.rank}}) </button>
+            <button @click="ownedTxlClick" class="ownedTxlButton" v-for="index in ownedTxls" :key="index"> {{index.name}} ({{index.rank + 1}}) </button>
         </div>
         <div class="genericFlex">
             <div class="displayBox">
@@ -48,7 +48,7 @@
         </div>
         <div class="unSoldTxlFlexContainer">
             <div class="ownedTxlContainer"> ID (RANK)  </div>
-            <button @click="ownedTxlClick" class="ownedTxlButton" v-for="index in unSoldTxls" :key="index"> {{index.name}} ({{index.rank}}) </button>
+            <button @click="ownedTxlClick" class="ownedTxlButton" v-for="index in unSoldTxls" :key="index"> {{index.name}} ({{index.rank + 1}}) </button>
         </div>
         <div class="ownedTxlFlexContainer">
             Learn more about these awesome NFTs!

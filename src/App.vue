@@ -94,7 +94,7 @@ export default {
           this.uniqueTxlOwners = this.uniqueTxlOwners[0]
           if (thisTxlOwner === this.setAddress) {
             const index = this.ownedTxls.length
-            const thisTxlRank = TXL_RANKINGS[txl_id]
+            const thisTxlRank = Number(TXL_RANKINGS[txl_id])
             this.ownedTxls[index] = {name: zero_filled_txl_id, value: txl_id, rank: thisTxlRank}
             const index2 = this.soldTxls.length
             this.soldTxls[index2] = {name: zero_filled_txl_id, value: txl_id}
