@@ -139,7 +139,10 @@ export default {
         },
         displayKalaTxl () {
             if (this.$refs.searchTxl.value) {
-                const txl_id = this.$refs.searchTxl.value
+                if (Number(this.$refs.searchTxl.value) < 1 || Number(this.$refs.searchTxl.value) > 272 ) {
+                    return
+                }
+                const txl_id = String(this.$refs.searchTxl.value)
                 this.$emit("loadTxl", txl_id)
             }
         },
