@@ -100,7 +100,7 @@ export default {
             this.soldTxls[index2] = {name: zero_filled_txl_id, value: txl_id}
           } else if (thisTxlOwner === OBJKT_CONTRACT) {
             const index = this.unSoldTxls.length
-            const thisTxlRank = TXL_RANKINGS[txl_id]
+            const thisTxlRank = Number(TXL_RANKINGS[txl_id])
             this.unSoldTxls[index] = {name: zero_filled_txl_id, value: txl_id, rank: thisTxlRank}
           } else {
             const index3 = this.soldTxls.length
