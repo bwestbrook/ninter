@@ -7,8 +7,9 @@
       />
     </div>
     <displayTxl 
-        :displayLink="displayLink" :collectionAttributes="collectionAttributes" 
-        :tokenAttributes="tokenAttributes" :objktUrl="objktUrl" :unSoldTxls="unSoldTxls" :soldTxls="soldTxls"
+        :displayLink="displayLink" :collectionAttributes="collectionAttributes" :uniqueTxlOwners="uniqueTxlOwners"
+        :tokenAttributes="tokenAttributes" :txlRank="txlRank"
+        :objktUrl="objktUrl" :unSoldTxls="unSoldTxls" :soldTxls="soldTxls"
         :loadedTxl="loadedTxl" :ownedTxls="ownedTxls" @loadTxl="loadTxl" @canBuyOnObjkt="canBuyOnObjkt"
     />
   </div>
@@ -20,7 +21,7 @@ import walletConnect from "./components/walletConnect.vue"
 import displayTxl from "./components/displayTxl.vue"
 import { getAllKalamintTokens } from './services/tezos-services.js'
 import { reduceAddress, zeroFillId } from './services/utilities.js'
-import { ID_LOOKUP, IPFS_HTTPS_LINK, OBJKT_CONTRACT, FULL_TXL_STATS } from './constants.js'
+import { ID_LOOKUP, IPFS_HTTPS_LINK, OBJKT_CONTRACT, FULL_TXL_STATS, TXL_RANKINGS } from './constants.js'
 
 
 export default {
@@ -35,11 +36,14 @@ export default {
       kalaTxls: [
       ],
       ownedTxls: [
-        ],
+      ],
       unSoldTxls: [
+      ],
+      uniqueTxlOwners: [
       ],
       soldTxls: [
       ],
+      txlRank: -1,
       walletConnected: false,
       objktUrl: "", 
       displayLink: "",
@@ -58,7 +62,6 @@ export default {
   methods: {
     canBuyOnObjkt (objkt_link) {
       this.objktUrl = objkt_link
-      console.log(this.objktUrl)
     },
     toggleConnectToBeacon() {
       if (!this.connectToBeacon) {
@@ -78,19 +81,27 @@ export default {
       this.ownedTxls = []
       this.unSoldTxls = []
       this.soldTxls = []
+      let txlOwners = []
+
       for (txl_id; txl_id <= 272; ++txl_id) {
         const zero_filled_txl_id = zeroFillId(txl_id)
         const thisTxl = this.kalaTxls[txl_id - 1]
         if (this.kalaTxls[txl_id - 1]) {
           const thisTxlOwner = thisTxl.owner
+          const index0 = txlOwners.length
+          txlOwners[index0] = thisTxlOwner
+          this.uniqueTxlOwners = [new Set(txlOwners)]
+          this.uniqueTxlOwners = this.uniqueTxlOwners[0]
           if (thisTxlOwner === this.setAddress) {
             const index = this.ownedTxls.length
-            this.ownedTxls[index] = {name: zero_filled_txl_id, value: txl_id}
+            const thisTxlRank = TXL_RANKINGS[txl_id]
+            this.ownedTxls[index] = {name: zero_filled_txl_id, value: txl_id, rank: thisTxlRank}
             const index2 = this.soldTxls.length
             this.soldTxls[index2] = {name: zero_filled_txl_id, value: txl_id}
           } else if (thisTxlOwner === OBJKT_CONTRACT) {
             const index = this.unSoldTxls.length
-            this.unSoldTxls[index] = {name: zero_filled_txl_id, value: txl_id}
+            const thisTxlRank = TXL_RANKINGS[txl_id]
+            this.unSoldTxls[index] = {name: zero_filled_txl_id, value: txl_id, rank: thisTxlRank}
           } else {
             const index3 = this.soldTxls.length
             this.soldTxls[index3] = {name: zero_filled_txl_id, value: txl_id}
@@ -122,6 +133,8 @@ export default {
     },
     async loadTxl(token_id) {
       this.tokenAttributes = []
+      this.txlRank = Number(TXL_RANKINGS[token_id])
+      console.log(this.txlRank)
       if (token_id < 0  || token_id > 272) {
         alert("Please insert token ID between 1 and 272")
         return
@@ -131,11 +144,7 @@ export default {
       const kalamint_tokens = await getAllKalamintTokens()
 
       token_id = Number(token_id)
-
-      console.log(token_id)
-      console.log(token_id - 1)
       this.tokenAttributes = FULL_TXL_STATS[token_id]
-      console.log(this.tokenAttributes)
       const thisTxl = await kalamint_tokens.get(kalamint_token_id)
       let owner = thisTxl.owner
       if (owner === OBJKT_CONTRACT) {
@@ -150,8 +159,6 @@ export default {
         {name: 'owner', value: owner},
         {name: 'Kala ID', value: kalamint_token_id}
       ]
-      console.log(this.attributes)
-      console.log(this.displayLink)
       this.updateTxlLedger()
     },
     hideNft() {

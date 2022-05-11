@@ -6,12 +6,18 @@
             <div class="tabButtons"> Gallery View </div>
             <div class="tabButtons"> Leader Board </div>
         </div>
+        <div class="ownedTxlFlexContainer">
+            <div class="attributeCategory"> Total Sold  </div>
+            <div class="attributeCategory"> {{soldTxls.length}}  </div>
+            <div class="attributeCategory"> Unique Wallets </div>
+            <div class="attributeCategory"> {{uniqueTxlOwners.size}}   </div>
+        </div>
         <div class="howToFlexContainer">    
             <div class="description"> {{howTo}}</div>
         </div>
         <div class="ownedTxlFlexContainer">
-            <div class="ownedTxlContainer"> Owned </div>
-            <button @click="ownedTxlClick" class="ownedTxlButton" v-for="index in ownedTxls" :key="index"> {{index.name}} </button>
+            <div class="ownedTxlContainer"> ID (Rank) </div>
+            <button @click="ownedTxlClick" class="ownedTxlButton" v-for="index in ownedTxls" :key="index"> {{index.name}} ({{index.rank}}) </button>
         </div>
         <div class="genericFlex">
             <div class="displayBox">
@@ -24,25 +30,25 @@
                 </div>
             </div>
         </div>
+
         <div class="attributeFlexContainer">
             <div @click="prevTxl" class="bigArrow" ref="prevArrow"> &#x2190; </div>
-            <div class="collectionAttributeDisplay"> Rank TBC of 272 </div>
+            <div class="collectionAttributeDisplay"> Rank {{txlRank + 1}} of 272 </div>
             <div class="collectionAttributeDisplay" v-for="key in collectionAttributes" :key="key.name">{{key.name}} : {{key.value}}</div>
             <div class="attributeFlexButton" @click="buyOnObjkt" >Buy/Offer on Objkt!</div>
             <button @click="nextTxl" class="bigArrow" ref="nextArrow"> &#x2192; </button>
         </div>
         <div class="broswerFlexContainer">
-            <div class="informationContainer" @click="displayKalaTxl">Enter 2.725K ID</div>
-            <input v-on:keydown.enter="displayKalaTxl" placeholder="Check out a TXL" type="number" ref="searchTxl"/>
-            <button class="navButtons" @click="displayKalaTxl">Check it out!</button>
+            <input v-on:keydown.enter="displayKalaTxlRank" placeholder="Search By Rank" type="number" ref="searchRankTxl"/>
+            <input v-on:keydown.enter="displayKalaTxl" placeholder="Search By ID" type="number" ref="searchTxl"/>
             <button class="navButtons" @click="randomTxl">View a random 2.725K</button>
-            <div class="informationContainer"> {{soldTxls.length}} / 272 Sold! </div>
-            <div class="informationContainer"> Loaded 2.725K: {{loadedTxl}} of 272 </div>
-
+        </div>
+        <div class="howToFlexContainer">
+            <div> THE 2.725K LISTED BELOW ARE ON PRIMARY </div>
         </div>
         <div class="unSoldTxlFlexContainer">
-            <div class="ownedTxlContainer"> Primary: </div>
-            <button @click="ownedTxlClick" class="ownedTxlButton" v-for="index in unSoldTxls" :key="index"> {{index.name}} </button>
+            <div class="ownedTxlContainer"> ID (RANK)  </div>
+            <button @click="ownedTxlClick" class="ownedTxlButton" v-for="index in unSoldTxls" :key="index"> {{index.name}} ({{index.rank}}) </button>
         </div>
         <div class="ownedTxlFlexContainer">
             Learn more about these awesome NFTs!
@@ -56,16 +62,27 @@
             <div class="description"> {{status}}</div>
         </div>
         <div class="descriptionFlexContainer">
+            <a href="{{rankings_hash}}">IPFS LINK TO ALL METADETA: {{rankings_hash}}</a>
+        </div>
+        <div class="descriptionFlexContainer">
             <div>{{footer}}</div>
         </div>
-    </div>    
+    </div>
+  
 </template>
 
 <script>
 
 
 import { getRandomIntInclusive } from '../services/utilities.js'
-import { PROJECT_DESCRIPTION, FOOTER, PROJECT_STATUS, HOW_TO, OBJKT_KALA_BASE } from '../constants.js'
+import {
+    PROJECT_DESCRIPTION, 
+    FOOTER,
+    PROJECT_STATUS,
+    HOW_TO,
+    OBJKT_KALA_BASE,
+    TXL_REV_RANKINGS,
+    RANKINGS_HASH } from '../constants.js'
 import $ from 'jquery'
 
 
@@ -75,7 +92,8 @@ export default {
             description: PROJECT_DESCRIPTION,
             footer: FOOTER,
             status: PROJECT_STATUS,
-            howTo: HOW_TO
+            howTo: HOW_TO,
+            rankings_hash: RANKINGS_HASH
         }
     },
     beforeMount(){
@@ -94,6 +112,8 @@ export default {
         "ownedTxls",
         "unSoldTxls",
         "soldTxls",
+        "txlRank",
+        "uniqueTxlOwners",
         "clickedOwnedTxl"
         ],
     methods: {
@@ -107,43 +127,49 @@ export default {
         closeModal() {
             console.log("hi close ")
         },
-        displayKalaTxl (id = 102) {
-            let this_id = this.collectionAttributes[0].value
-            this_id = Number(this_id)
-            if (this_id < 1 || this_id > 272) {
-                return
-            } 
+        displayKalaTxlRank () {
+            if (this.$refs.searchRankTxl.value) {
+                if (Number(this.$refs.searchRankTxl.value) < 1 || Number(this.$refs.searchRankTxl.value) > 272 ) {
+                    return
+                }
+                const txl_rank = Number(this.$refs.searchRankTxl.value) - 1
+                const txl_id = TXL_REV_RANKINGS[txl_rank]
+                this.$emit("loadTxl", txl_id)
+            }
+        },
+        displayKalaTxl () {
             if (this.$refs.searchTxl.value) {
-                id = this.$refs.searchTxl.value
-                console.log('emitting', id)
-                this.$emit("loadTxl", id)
+                const txl_id = this.$refs.searchTxl.value
+                this.$emit("loadTxl", txl_id)
             }
         },
         prevTxl () {
-            let this_id = this.collectionAttributes[0].value
-            let next_id = this_id
-            this_id = Number(this_id)
-            if (this_id === 1 ) {
+            let this_rank = this.txlRank
+            this_rank = Number(this_rank)
+            let prev_rank = this_rank
+            if (this_rank === 0) {
                 return
             } else {
-                next_id = this_id - 1
-                this.$emit("loadTxl", next_id)
+                prev_rank = this_rank - 1
+                const txl_id = TXL_REV_RANKINGS[prev_rank]
+                this.$emit("loadTxl", txl_id)
+            }
+        },
+        nextTxl () {
+            let this_rank = this.txlRank
+            this_rank = Number(this_rank)
+            let next_rank = this_rank
+            if (this_rank === 271 ) {
+                return
+            } else {
+                next_rank = this_rank + 1
+                const txl_id = TXL_REV_RANKINGS[next_rank]
+                this.$emit("loadTxl", txl_id)
             }
         },
         randomTxl () {
             const random_txl_id = getRandomIntInclusive(1, 272)
             this.$emit("loadTxl", random_txl_id)
-        },
-        nextTxl () {
-            let this_id = this.collectionAttributes[0].value
-            let next_id = this_id
-            this_id = Number(this_id)
-            if (this_id === 272 ) {
-                return
-            } else {
-                next_id = this_id + 1
-                this.$emit("loadTxl", next_id)
-            }
         },
         buyOnObjkt () {
             const kala_token_id = this.collectionAttributes[2].value
@@ -161,7 +187,7 @@ export default {
     border-radius: 10px;
     display: flex;
     background: rgb(115, 96, 96);
-    justify-content: end;
+    justify-content: flex-end;
 }
 .genericVerticalFlex{
     padding: 10px;
@@ -169,7 +195,7 @@ export default {
     border-radius: 10px;
     display: flex;
     background: rgb(143, 128, 128);
-    justify-content: end;
+    justify-content: flex-end;
     flex-direction: column; 
 }
 .inputDiv{
@@ -259,7 +285,7 @@ export default {
     padding: 2px;
     background: rgb(3, 2, 2);
     color: aliceblue;
-    width: 75px;
+    width: 100px;
     height: 20px;
     border-radius: 3px;
 }
