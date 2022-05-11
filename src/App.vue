@@ -133,7 +133,7 @@ export default {
     },
     async loadTxl(token_id) {
       this.tokenAttributes = []
-      this.txlRank = Number(TXL_RANKINGS[token_id])
+      this.txlRank = Number(TXL_RANKINGS[Number(token_id)])
       console.log(this.txlRank)
       if (token_id < 0  || token_id > 272) {
         alert("Please insert token ID between 1 and 272")

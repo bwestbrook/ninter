@@ -119,7 +119,9 @@ export default {
     methods: {
         ownedTxlClick: function (e) {
             var clickedOwnedTxl = e.target;
+            console.log($(clickedOwnedTxl).text().split(' ')[0])
             const txl_id = $(clickedOwnedTxl).text().split(' ')[0]
+            console.log(txl_id)
             this.$emit("loadTxl", txl_id)
             clickedOwnedTxl = txl_id
             return clickedOwnedTxl
