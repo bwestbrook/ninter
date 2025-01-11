@@ -191,7 +191,7 @@ export default {
     margin: 1px auto;
     border-radius: 10px;
     display: flex;
-    background: rgb(115, 96, 96);
+    background: rgb(0, 0, 0);
     justify-content: flex-end;
 }
 .genericVerticalFlex{
@@ -199,7 +199,7 @@ export default {
     margin: 1px auto;
     border-radius: 10px;
     display: flex;
-    background: rgb(143, 128, 128);
+    background: rgb(0, 0, 0);
     justify-content: flex-end;
     flex-direction: column; 
 }
@@ -221,7 +221,7 @@ export default {
 .displayBox{
     width: 650px;
     height: 510px;
-    background-color: rgb(32, 24, 29);
+    background-color: rgb(0, 0, 0);
     border: 5px;    
     border-radius: 5px;   
     display: flex;
@@ -233,16 +233,14 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    background: rgb(143, 128, 128);
+    background: rgb(0, 0, 0);
 
 }
 .attributeFlexContainer{
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    background: rgb(143, 128, 128);
-
-
+    background: rgb(0, 0, 0);
 }
 .attributeFlexButton{
     padding: 2px;
@@ -251,8 +249,8 @@ export default {
     margin: 10px auto;
     border-radius: 5px;
     border-style: solid;
-    color:aliceblue;
-    background: rgb(59, 37, 37);
+    color:rgb(255, 255, 255);
+    background: rgb(0, 0, 0);
     font: bold;
     font-size: 15px;
     display: flex;
@@ -266,22 +264,22 @@ export default {
     padding: 3px;
     align-content: space-between;
     justify-content: space-between;
-    background: rgb(143, 128, 128);
+    background: rgb(0, 0, 0);
 }
 .unSoldTxlFlexContainer{
     display: flex;
     flex-wrap: wrap;
     align-content: space-between;
     justify-content: space-between;
-    background: rgb(115, 96, 96);   
+    background: rgb(0, 0, 0);   
 }
 .ownedTxlButton{
     padding: 2px;
-    background: rgb(87, 58, 58);
-    color: aliceblue;
+    background: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     border-radius: 5px;
     border-style: solid;
-    border-color: aliceblue;
+    border-color: rgb(255, 255, 255);
     margin: 2px;
     width: 75px;
     border-radius: 6px;
@@ -289,7 +287,7 @@ export default {
 .ownedTxlContainer{
     padding: 2px;
     background: rgb(3, 2, 2);
-    color: aliceblue;
+    color: rgb(255, 255, 255);
     width: 100px;
     height: 20px;
     border-radius: 3px;
@@ -299,7 +297,7 @@ export default {
     border: 5px;
     display: flex;
     border-radius: 4px;
-    background: grey;
+    background: rgb(0, 0, 0);
     flex-direction: column;
 }
 .collectionAttributeDisplay{
@@ -308,8 +306,8 @@ export default {
     flex-basis: 100px;
     margin: 10px auto;
     border-radius: 5px;
-    color:aliceblue;
-    background: rgb(3, 2, 2);
+    color:rgb(255, 255, 255);
+    background: rgb(0, 0, 0);
     font: bold;
     font-size: 15px;
     display: flex;
@@ -329,7 +327,7 @@ export default {
     border: 1px;
     border-color: aliceblue;
     justify-content: center;
-    color:rgb(4, 25, 44);
+    color:rgb(255, 255, 255);
 }
 .attributeCategory{
     padding: 2px;
@@ -339,7 +337,7 @@ export default {
     margin: 10px auto;
     border-radius: 5px;
     color:aliceblue;
-    background: rgb(25, 20, 20);
+    background: rgb(0, 0, 0);
     font: bold;
     font-size: 15px;
     display: flex;
@@ -355,7 +353,7 @@ export default {
     border-style: solid;
     height: 75px;
     color:aliceblue;
-    background: rgb(59, 37, 37);
+    background: rgb(0, 0, 0);
     font: bold;
     font-size: 50px;
     display: flex;
@@ -368,12 +366,12 @@ export default {
     border-radius: 4px;
     min-width: 200px;
     margin: 2px; 
-    background: rgb(150, 31, 193);
+    background: rgb(0, 0, 0);
     color:aliceblue;
 }
 .tabFlexContainer{
     display: flex;
-    background: rgb(143, 128, 128);
+    background: rgb(0, 0, 0);
     align-content: space-between;
     justify-content: space-between;
 }
@@ -382,15 +380,15 @@ export default {
     min-width: 200px;
     margin: 2px; 
     display: flex;
-    background: rgb(46, 17, 17);
-    color:aliceblue;
+    background: rgb(0, 0, 0);
+    color:rgb(255, 255, 255);
 }
 .navButtons{
     border-radius: 4px;
     min-width: 200px;
     margin: 2px; 
-    background: rgb(22, 32, 25);
-    color:aliceblue;
+    background: rgb(0, 0, 0);
+    color:rgb(255, 255, 255);
 }
 .primaryFlexContainer{
     display: flex;

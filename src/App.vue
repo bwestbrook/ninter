@@ -1,17 +1,19 @@
 <template>
-  <div class="mainFlex">
-    <div>
-      <walletConnect 
-        :connectToBeacon="connectToBeacon" :walletConnected="walletConnected" :ownedTxls="ownedTxls"
-        @addressReady="addressReady" @loggedOut="clearOwnedTxls" @toggleConnectToBeacon="toggleConnectToBeacon" 
+  <div class="body">
+    <div class="mainFlex">
+      <div>
+        <walletConnect 
+          :connectToBeacon="connectToBeacon" :walletConnected="walletConnected" :ownedTxls="ownedTxls"
+          @addressReady="addressReady" @loggedOut="clearOwnedTxls" @toggleConnectToBeacon="toggleConnectToBeacon" 
+        />
+      </div>
+      <displayTxl 
+          :displayLink="displayLink" :collectionAttributes="collectionAttributes" :uniqueTxlOwners="uniqueTxlOwners"
+          :tokenAttributes="tokenAttributes" :txlRank="txlRank"
+          :objktUrl="objktUrl" :unSoldTxls="unSoldTxls" :soldTxls="soldTxls"
+          :loadedTxl="loadedTxl" :ownedTxls="ownedTxls" @loadTxl="loadTxl" @canBuyOnObjkt="canBuyOnObjkt"
       />
     </div>
-    <displayTxl 
-        :displayLink="displayLink" :collectionAttributes="collectionAttributes" :uniqueTxlOwners="uniqueTxlOwners"
-        :tokenAttributes="tokenAttributes" :txlRank="txlRank"
-        :objktUrl="objktUrl" :unSoldTxls="unSoldTxls" :soldTxls="soldTxls"
-        :loadedTxl="loadedTxl" :ownedTxls="ownedTxls" @loadTxl="loadTxl" @canBuyOnObjkt="canBuyOnObjkt"
-    />
   </div>
 </template>
 
@@ -174,35 +176,19 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 0px;
+  color: #000000;
+  background: black;
+  margin:0;
   width: 100%;
+  
 }
-.inputSectionDiv{
-  background: green;
-  display: flex;
-  justify-content: flex-end;
+body{
+  margin:0px;
 }
-.customHeader{
-  border-bottom: 2px solid #ddd;
-  display: inline-block;
-  padding-bottom: 5px;
-}
-.mainBackground{
-  border-bottom: 1px solid #ddd;
-  display: inline-block;
-  padding-bottom: 2px;
-  border-radius: 2px;
-  background: rgb(170, 158, 158);
-  width: 100%;
-  height: 100%;
-}
-.mainFlex {
-    padding: 20px;
-    border: 5px;
+mainFlex {
+    margin: 0px;
     display: flex;
-    border-radius: 4px;
-    background: grey;
+    background: rgb(0, 0, 0);
     flex-direction: column;
 }
 </style>

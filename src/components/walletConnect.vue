@@ -120,7 +120,7 @@ export default {
     width: 95%;
     display: flex;
     border-radius: 4px;
-    background: grey;
+    background: rgb(0, 0, 0);
     justify-content: flex-end;
 }
 .wallConnectFlex {
@@ -129,14 +129,14 @@ export default {
     border: 5px;
     display: flex;
     border-radius: 4px;
-    background: grey;
+    background: rgb(0, 0, 0);
     flex-direction: column;
 }
 .walletConnectButton{
-    color: #2f77b5;
+    color: #ffffff;
     border-style: solid;
     border: 2px;
-    background-color: rgb(28, 73, 73); 
+    background-color: rgb(0, 0, 0); 
     margin: 2px; 
     text-align: center; 
     border-radius: 4px;
@@ -145,9 +145,9 @@ export default {
     font-size: 16px; 
 }
 .walletFlexItem{
-    color: #2f77b5;
+    color: #ffffff;
     background: rgb(1, 10, 10);
-    background-color: rgb(180, 161, 161); 
+    background-color: rgb(0, 0, 0); 
     margin: 2px; 
     text-align: center; 
     border-radius: 4px;
@@ -161,8 +161,8 @@ export default {
     border-radius: 4px;
     min-width: 200px;
     margin: 2px; 
-    background-color: rgb(180, 161, 161); 
-    color:aliceblue;
+    background-color: rgb(0, 0, 0); 
+    color:rgb(255, 255, 255);
 }
 .displayAddress{
     padding: 20px;

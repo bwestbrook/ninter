@@ -7,7 +7,7 @@
 
 <script>
 import { IPFS_HTTPS_LINK } from '@/constants.js'
-import { getIpfsMetaDataJson } from '../services/beacon-services.js'
+import { getIpfsMetaDataJson } from '../services/tezos-services.js'
 
 
 export default {
