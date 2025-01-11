@@ -9,14 +9,14 @@
     "start": "vue-cli-service serve"
   },
   "dependencies": {
+    "@airgap/beacon-sdk": "^3.0.0",
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@taquito/beacon-wallet": "^12.1.0",
+    "@taquito/taquito": "^12.1.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
-    "@airgap/beacon-sdk": "^3.0.0",
-    "@taquito/beacon-wallet": "^12.1.0",
-    "@taquito/taquito": "^12.1.0",
     "core-js": "^3.8.3",
     "jquery": "^3.6.0",
     "node-polyfill-webpack-plugin": "^1.1.4",
